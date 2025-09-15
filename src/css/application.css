@@ -133,12 +133,21 @@ main {
 #materials {
   padding: 10%;
   background: #f8f9fa;
+  display: flex;
+  gap: 60px;
+  align-items: center;
 }
 
-#materials>div {
+#materials .left {
+  flex: 1;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+}
+
+#materials .right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .flex-col {
@@ -286,7 +295,7 @@ footer a:hover {
     font-size: 40px;
   }
 
-  #materials>div,
+  #materials,
   #innovation>div,
   #features>div>div {
     gap: 60px;
@@ -319,7 +328,17 @@ footer a:hover {
     max-width: 100%;
   }
 
-  #materials>div,
+  #materials {
+    flex-direction: column;
+    gap: 40px;
+    text-align: center;
+  }
+
+  #materials .left,
+  #materials .right {
+    flex: none;
+  }
+
   #innovation>div,
   #features>div>div {
     grid-template-columns: 1fr;
