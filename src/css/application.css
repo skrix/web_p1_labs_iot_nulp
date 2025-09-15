@@ -85,7 +85,7 @@ main {
   z-index: 1;
 }
 
-#hero > div {
+#hero>div {
   position: relative;
   z-index: 2;
   max-width: 1200px;
@@ -139,7 +139,7 @@ main {
   background: #f8f9fa;
 }
 
-#materials > div {
+#materials>div {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
@@ -197,7 +197,7 @@ main {
   text-align: center;
 }
 
-#innovation > div {
+#innovation>div {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
@@ -216,12 +216,12 @@ main {
   background: white;
 }
 
-#features > div {
+#features>div {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-#features > div > div {
+#features>div>div {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
@@ -234,7 +234,7 @@ main {
   border-radius: 10px;
 }
 
-#features > div > div > div:last-child {
+#features>div>div>div:last-child {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
@@ -259,7 +259,7 @@ footer {
   color: white;
 }
 
-footer > div {
+footer>div {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -280,4 +280,88 @@ footer a {
 
 footer a:hover {
   color: white;
+}
+
+@media (max-width: 1024px) {
+  #hero h1 {
+    font-size: 40px;
+  }
+
+  #materials>div,
+  #innovation>div,
+  #features>div>div {
+    gap: 60px;
+  }
+
+  nav ul {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  #hero {
+    padding: 120px 20px 60px;
+    text-align: center;
+  }
+
+  #hero h1 {
+    font-size: 32px;
+    max-width: 100%;
+  }
+
+  #materials>div,
+  #innovation>div,
+  #features>div>div {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  #features>div>div>div:last-child {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  footer>div {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  footer a {
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #hero h1 {
+    font-size: 28px;
+  }
+
+  #materials h2,
+  #innovation h2 {
+    font-size: 28px;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #materials,
+  #innovation,
+  #features {
+    padding: 60px 20px;
+  }
 }
