@@ -131,7 +131,7 @@ main {
 }
 
 #materials {
-  padding: 10%;
+  padding: 0 10%;
   background: #f8f9fa;
   display: flex;
   gap: 60px;
@@ -176,7 +176,7 @@ main {
   padding: 12px 24px;
   border-radius: 5px;
   font-size: 16px;
-  width: 90px;
+  width: max-content;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -189,20 +189,19 @@ main {
 #materials img {
   width: 100%;
   height: auto;
-  border-radius: 10px;
 }
 
 #innovation {
-  padding: 100px 20px;
-  background: #2c3e50;
+  padding: 10%;
+  background: #26353B;
   color: #fff;
 }
 
 #innovation h2 {
   font-size: 36px;
   font-weight: 700;
-  margin-bottom: 50px;
-  text-align: center;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 #innovation>div {
@@ -216,11 +215,11 @@ main {
 #innovation p {
   font-size: 16px;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 #features {
-  padding: 100px 20px;
+  padding: 10%;
   background: #fff;
   max-width: 1200px;
   margin: 0 auto;
@@ -263,8 +262,8 @@ main {
 
 footer {
   padding: 40px 20px;
-  background: #2c3e50;
-  color: #fff;
+  background: #26353B;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 footer>div {
@@ -280,7 +279,7 @@ footer img {
 }
 
 footer a {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   margin-left: 20px;
   font-size: 14px;
