@@ -41,6 +41,11 @@ h1, h2, h3, h4, h5, h6 {
     "wdth" 100;
 }
 
+a {
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
 header {
   position: absolute;
   top: 0;
@@ -67,7 +72,6 @@ nav ul {
 
 nav a {
   color: var(--accent-color);
-  text-decoration: none;
   font-weight: 500;
   transition: opacity var(--transition);
 }
@@ -523,4 +527,39 @@ footer a:hover {
   #features {
     padding: 60px 20px;
   }
+}
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container img {
+  height: 100% !important;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.image-container:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-title {
+  color: var(--accent-color);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  text-align: center;
+  font-family: "Merriweather", serif;
 }
