@@ -379,6 +379,10 @@ footer a:hover {
 }
 
 @media (max-width: 1024px) {
+  #hero {
+    flex-direction: column;
+  }
+
   #hero h1 {
     font-size: 40px;
   }
