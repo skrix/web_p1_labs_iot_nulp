@@ -387,6 +387,10 @@ footer a:hover {
     font-size: 40px;
   }
 
+  #btn-read-more {
+    align-self: center;
+  }
+
   #materials,
   #innovation>div,
   #features {
