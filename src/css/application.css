@@ -93,6 +93,61 @@ img#brand {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.nav-toggle {
+  display: none;
+}
+
+.nav-toggle-label {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-toggle-label span,
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+  display: block;
+  background: var(--accent-color);
+  height: 3px;
+  width: 30px;
+  border-radius: 3px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+  content: '';
+  position: absolute;
+}
+
+.nav-toggle-label span::before {
+  bottom: 8px;
+}
+
+.nav-toggle-label span::after {
+  top: 8px;
+}
+
+.nav-toggle:checked ~ .nav-toggle-label span {
+  background: transparent;
+}
+
+.nav-toggle:checked ~ .nav-toggle-label span::before {
+  bottom: 0;
+  transform: rotate(-45deg);
+}
+
+.nav-toggle:checked ~ .nav-toggle-label span::after {
+  top: 0;
+  transform: rotate(45deg);
+}
+
 main {
   display: flex;
   flex-direction: column;
@@ -341,14 +396,48 @@ footer a:hover {
 
 @media (max-width: 768px) {
   nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-toggle-label {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--primary-color);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px 0;
+  }
+
+  .nav-toggle:checked ~ .nav-menu {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-menu ul {
     flex-direction: column;
     gap: 20px;
+    padding: 0 10%;
+  }
+
+  .nav-menu li {
+    text-align: center;
   }
 
   nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   #hero {
@@ -415,9 +504,8 @@ footer a:hover {
     font-size: 28px;
   }
 
-  nav ul {
-    flex-direction: column;
-    gap: 10px;
+  .nav-menu ul {
+    gap: 15px;
   }
 
   #materials,
