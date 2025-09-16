@@ -155,8 +155,10 @@ main {
 
 #hero {
   background-image: url('../assets/img_hero.png');
-  background-size: cover;
+  background-attachment: fixed;
   background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   flex-direction: row;
