@@ -16,7 +16,19 @@ class Store {
   }
 
   sort(compareFn) {
-    this.books.sort(compareFn);
+    return this.books.sort(compareFn);
+  }
+
+  search(title) {
+    if (!title || title.trim() === '') {
+      return this.books;
+    }
+
+    return this.books.filter(book => book.title.toLowerCase().includes(title.toLowerCase().trim()));;
+  }
+
+  clearSearch() {
+    return this.books;
   }
 }
 
