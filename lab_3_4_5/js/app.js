@@ -1,7 +1,7 @@
 import Store from './store.js';
 
-let store;
-
 document.addEventListener('DOMContentLoaded', () => {
-  store = new Store();
+  const store = new Store();
+
+  console.log(store.books);
 });
