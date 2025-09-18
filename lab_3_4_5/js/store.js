@@ -53,7 +53,7 @@ class Store {
       return this.books;
     }
 
-    return this.books.filter(book => book.title.toLowerCase().includes(title.toLowerCase().trim()));;
+    return this.books.filter(book => book.title.toLowerCase().includes(title.toLowerCase().trim()));
   }
 
   clearSearch() {
