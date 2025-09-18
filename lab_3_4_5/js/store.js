@@ -23,9 +23,12 @@ class Store {
   }
 
   add(bookData) {
-    const book = new Book(...bookData);
-    this.books.push(book);
+    // Generate new ID
+    const maxId = this.books.length > 0 ? Math.max(...this.books.map(book => book.id)) : 0;
+    const newBook = new Book({ ...bookData, id: maxId + 1 });
+    this.books.push(newBook);
     this.saveToStorage();
+    return newBook;
   }
 
   remove(bookId) {
