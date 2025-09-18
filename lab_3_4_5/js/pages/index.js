@@ -53,9 +53,18 @@ function handleSortToggle(store, sortToggle) {
   };
 }
 
+function handleCalculate(store) {
+  return () => {
+    const totalPrice = store.calculateTotalPrice();
+    const totalPriceElement = document.getElementById('js-total-price');
+    totalPriceElement.textContent = `${totalPrice.toFixed(2)} UAH`;
+  };
+}
+
 export {
   renderBooks,
   handleSearch,
   handleClear,
-  handleSortToggle
+  handleSortToggle,
+  handleCalculate
 }

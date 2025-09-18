@@ -30,6 +30,10 @@ class Store {
   clearSearch() {
     return this.books;
   }
+
+  calculateTotalPrice() {
+    return this.books.reduce((total, book) => total + book.price, 0);
+  }
 }
 
 export default Store;
