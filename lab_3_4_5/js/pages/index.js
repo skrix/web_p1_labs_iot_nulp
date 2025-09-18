@@ -22,19 +22,40 @@ async function renderBooks(books) {
   booksGrid.innerHTML = books.map(book => renderBookTemplate(book, cardTemplate)).join('');
 }
 
-function handleSearch(store, searchInput) {
-  return () => { renderBooks(store.search(searchInput.value)) };
+function byPrice(book1, book2) { return book1.price - book2.price };
+function byTitle(book1, book2) { return book1.title.localeCompare(book2.title) };
+function sortBooks(books, sortToggle) {
+  if (sortToggle.checked) {
+    return books.sort(byPrice);
+  } else {
+    return books.sort(byTitle);
+  }
 }
 
-function handleClear(store, searchInput) {
+function handleSearch(store, searchInput, sortToggle) {
+  return () => {
+    const books = store.search(searchInput.value);
+    renderBooks(sortBooks(books, sortToggle));
+  };
+}
+
+function handleClear(store, searchInput, sortToggle) {
   return () => {
     searchInput.value = '';
-    renderBooks(store.clearSearch());
+    const books = store.clearSearch();
+    renderBooks(sortBooks(books, sortToggle));
+  };
+}
+
+function handleSortToggle(store, sortToggle) {
+  return () => {
+    renderBooks(sortBooks(store.books, sortToggle));
   };
 }
 
 export {
   renderBooks,
   handleSearch,
-  handleClear
+  handleClear,
+  handleSortToggle
 }
