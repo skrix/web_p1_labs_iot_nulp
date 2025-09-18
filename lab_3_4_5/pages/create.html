@@ -49,7 +49,7 @@
 
             <div class="form-group">
                 <label for="isbn" class="form-label">ISBN</label>
-                <input type="text" id="isbn" name="isbn" class="form-input" placeholder="978-0-000-00000-0" required>
+                <input type="text" id="isbn" name="isbn" class="form-input" placeholder="978-0-000-00000-0" pattern="978-\d-\d{2}-\d{6}-\d" title="ISBN format: 978-X-XX-XXXXXX-X">
             </div>
 
             <div class="form-group">
@@ -97,8 +97,10 @@
             <button type="submit" class="btn btn--primary btn--wide btn--large form-submit">Add book</button>
         </form>
 
-        <div class="alert alert--error" id="error-alert" style="display: none;">
-            <span class="alert__text">Oh snap! Change a few things up and try submitting again.</span>
+        <br>
+
+        <div class="alert alert--error" id="js-error-alert" style="display: none;">
+            <span class="alert__text" id="js-error-text">Oh snap! Change a few things up and try submitting again.</span>
             <a href="#" type="button" class="alert__close" id="close-alert">×</a>
         </div>
     </div>
