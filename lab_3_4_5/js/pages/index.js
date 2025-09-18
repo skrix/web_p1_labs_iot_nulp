@@ -71,9 +71,7 @@ function handleCalculate(store) {
 }
 
 function handleRemove(store) {
-  console.log(store);
   return (event) => {
-    console.log(event);
     const bookId = parseInt(event.target.dataset.bookId);
     if (confirm('Are you sure you want to remove this book?')) {
       store.remove(bookId);
@@ -83,7 +81,6 @@ function handleRemove(store) {
 }
 
 function handleEdit(event) {
-  console.log(event);
   const bookId = parseInt(event.target.dataset.bookId);
   window.location.href = `../pages/edit.html?id=${bookId}`;
 }
