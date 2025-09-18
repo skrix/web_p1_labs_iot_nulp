@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Book - WeirdBooks</title>
-    <link rel="stylesheet" href="css/application.css">
+    <title>Edit Book - WeirdBooks</title>
+    <link rel="stylesheet" href="../css/application.css">
 </head>
 <body>
     <header class="header">
@@ -17,16 +17,16 @@
                     <a href="index.html" class="nav__item">My Books</a>
                 </li>
                 <li>
-                    <a href="create.html" class="nav__item nav__item--active">Add Book</a>
+                    <a href="create.html" class="nav__item">Add Book</a>
                 </li>
             </ul>
         </nav>
     </header>
 
     <div class="form-container">
-        <h1 class="form-title">Create book</h1>
+        <h1 class="form-title">Edit book</h1>
 
-        <form class="form" id="create-form">
+        <form class="form" id="edit-form">
             <div class="form-group">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" id="title" name="title" class="form-input" placeholder="Enter book title..." required>
@@ -52,6 +52,7 @@
                 <input type="text" id="isbn" name="isbn" class="form-input" placeholder="978-0-000-00000-0" required>
             </div>
 
+
             <div class="form-group">
                 <label for="genre" class="form-label">Genre</label>
                 <select id="genre" name="genre" class="form-select" required>
@@ -68,7 +69,7 @@
                       <option value="thriller">Thriller / Suspense</option>
                       <option value="horror">Horror</option>
                       <option value="romance">Romance</option>
-                      <option value="children">Children’s</option>
+                      <option value="children">Children's</option>
                     </optgroup>
 
                     <optgroup label="Non-Fiction">
@@ -94,7 +95,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn--primary btn--wide btn--large form-submit">Add book</button>
+            <button type="submit" class="btn btn--primary btn--wide btn--large form-submit">Save changes</button>
         </form>
 
         <div class="alert alert--error" id="error-alert" style="display: none;">
@@ -103,6 +104,6 @@
         </div>
     </div>
 
-    <script src="js/create.js"></script>
+    <script src="../js/edit.js"></script>
 </body>
 </html>
