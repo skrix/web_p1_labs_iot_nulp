@@ -1,4 +1,6 @@
-export default {
+import './book.js'
+
+const state = {
   books: [
     {
       id: 1,
@@ -62,3 +64,16 @@ export default {
     }
   ]
 };
+
+state.books = state.books.map(book => new Book(
+  book.id,
+  book.title,
+  book.author,
+  book.description,
+  book.price,
+  book.genre,
+  book.isbn,
+  book.image_url
+));
+
+export default state;
