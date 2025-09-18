@@ -1,4 +1,4 @@
-import Book from './book.js';
+import Book from '../models/book.js';
 import data from './data.js';
 
 class Store {
@@ -22,10 +22,12 @@ class Store {
     localStorage.setItem(this.storageKey, JSON.stringify(this.books));
   }
 
+  generateId() {
+    return this.books.length > 0 ? Math.max(...this.books.map(book => book.id)) + 1 : 1;
+  }
+
   add(bookData) {
-    // Generate new ID
-    const maxId = this.books.length > 0 ? Math.max(...this.books.map(book => book.id)) : 0;
-    const newBook = new Book({ ...bookData, id: maxId + 1 });
+    const newBook = new Book({ ...bookData, id: this.generateId() });
     this.books.push(newBook);
     this.saveToStorage();
     return newBook;

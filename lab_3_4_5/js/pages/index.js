@@ -1,5 +1,5 @@
 async function loadCardTemplate() {
-  const response = await fetch('../../components/card.html');
+  const response = await fetch('../components/card.html');
   return await response.text();
 }
 
