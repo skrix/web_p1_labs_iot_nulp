@@ -3,117 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Zoo - Animal Management</title>
+    <title>WeirdBooks - Book Management</title>
     <link rel="stylesheet" href="css/application.css">
 </head>
 <body>
-    <header>
-      <nav class="navigation">
-          <div class="nav-item active">My Zoo</div>
-          <div class="nav-item">My Animals</div>
-          <div class="nav-item">Create Animal</div>
+    <header class="header">
+        <nav class="nav">
+            <ul class="nav__list">
+                <li>
+                    <a href="index.html" class="nav__item">WeirdBooks</a>
+                </li>
+                <li>
+                    <a href="index.html" class="nav__item nav__item--active">My Books</a>
+                </li>
+                <li>
+                    <a href="create.html" class="nav__item">Add Book</a>
+                </li>
+            </ul>
 
-          <div class="search-section">
-              <input type="text" class="search-input" placeholder="Type something...">
-              <button class="search-btn">Search</button>
-              <button class="clear-btn">Clear</button>
-          </div>
-      </nav>
+            <div class="search">
+                <input type="search" id="book-search" class="input" placeholder="Search books...">
+                <button type="button" class="btn btn--primary">Search</button>
+                <button type="button" class="btn btn--secondary">Clear</button>
+            </div>
+        </nav>
     </header>
 
     <div class="container">
         <aside class="sidebar">
-            <h2>Manage animals</h2>
+            <h2>Manage books</h2>
 
-            <div class="filter-section">
-                <label class="filter-label">
-                    Sort by the most expensive animals
-                    <div class="toggle-switch">
-                        <input type="checkbox" id="sort-toggle" checked>
-                        <span class="slider"></span>
+            <div>
+                <label>
+                    Sort by price
+                    <div class="toggle">
+                        <input type="checkbox" id="sort-toggle" class="toggle__input">
+                        <span class="toggle__slider"></span>
                     </div>
                 </label>
             </div>
 
-            <div class="expense-section">
-                <h3>Count total daily expenses:</h3>
-                <button class="count-btn">Count</button>
+            <div>
+                <button type="button" class="btn btn--primary btn--wide btn--large">Calculate</button>
 
-                <div class="total-expenses">
-                    <span>Total expenses:</span>
-                    <span class="amount">$1250.5</span>
+                <div class="stats">
+                    <span>Total price:</span>
+                    <span class="stats__value">0.00 UAH</span>
                 </div>
             </div>
         </aside>
 
-        <main class="main-content">
-            <div class="animals-grid">
-                <div class="animal-card">
-                    <div class="animal-image">235x180</div>
-                    <div class="animal-info">
-                        <h3>Ocelot</h3>
-                        <p>It lives in South and Central America, as far up as Mexico. It has been reported as far north as Texas.</p>
-                        <div class="last-updated">Last updated 3 mins ago</div>
-                        <div class="card-actions">
-                            <button class="edit-btn">Edit</button>
-                            <button class="remove-btn">Remove</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="animal-card">
-                    <div class="animal-image">235x180</div>
-                    <div class="animal-info">
-                        <h3>Ocelot</h3>
-                        <p>It lives in South and Central America, as far up as Mexico. It has been reported as far north as Texas.</p>
-                        <div class="last-updated">Last updated 3 mins ago</div>
-                        <div class="card-actions">
-                            <button class="edit-btn">Edit</button>
-                            <button class="remove-btn">Remove</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="animal-card">
-                    <div class="animal-image">235x180</div>
-                    <div class="animal-info">
-                        <h3>Ocelot</h3>
-                        <p>It lives in South and Central America, as far up as Mexico. It has been reported as far north as Texas.</p>
-                        <div class="last-updated">Last updated 3 mins ago</div>
-                        <div class="card-actions">
-                            <button class="edit-btn">Edit</button>
-                            <button class="remove-btn">Remove</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="animal-card">
-                    <div class="animal-image">235x180</div>
-                    <div class="animal-info">
-                        <h3>Ocelot</h3>
-                        <p>It lives in South and Central America, as far up as Mexico. It has been reported as far north as Texas.</p>
-                        <div class="last-updated">Last updated 3 mins ago</div>
-                        <div class="card-actions">
-                            <button class="edit-btn">Edit</button>
-                            <button class="remove-btn">Remove</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="animal-card">
-                    <div class="animal-image">235x180</div>
-                    <div class="animal-info">
-                        <h3>Ocelot</h3>
-                        <p>It lives in South and Central America, as far up as Mexico. It has been reported as far north as Texas.</p>
-                        <div class="last-updated">Last updated 3 mins ago</div>
-                        <div class="card-actions">
-                            <button class="edit-btn">Edit</button>
-                            <button class="remove-btn">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <main class="main">
+            <div class="grid" id="books-grid"></div>
         </main>
     </div>
+    <script src="js/app.js"></script>
 </body>
 </html>
