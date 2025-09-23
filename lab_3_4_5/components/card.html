@@ -14,8 +14,8 @@
             <span class="card__price">Price: {{price}} UAH</span>
         </div>
         <div class="card__actions">
-            <a href="{{edit_url}}" type="button" class="btn btn--primary">Edit</a>
-            <a href="{{remove_url}}" type="button" class="btn btn--secondary">Remove</a>
+            <button type="button" class="btn btn--primary js-edit-btn" data-book-id="{{id}}">Edit</button>
+            <button type="button" class="btn btn--secondary js-remove-btn" data-book-id="{{id}}">Remove</button>
         </div>
     </div>
 </article>
