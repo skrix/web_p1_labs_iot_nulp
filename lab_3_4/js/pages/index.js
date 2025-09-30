@@ -33,32 +33,39 @@ async function renderBooks(books) {
 
 function byPrice(book1, book2) { return book1.price - book2.price };
 function byTitle(book1, book2) { return book1.title.localeCompare(book2.title) };
-function sortBooks(books, sortToggle) {
-  if (sortToggle.checked) {
-    return books.sort(byPrice);
-  } else {
-    return books.sort(byTitle);
+function byAuthor(book1, book2) { return book1.author.localeCompare(book2.author) };
+
+function sortBooks(books, sortSelect) {
+  const sortType = sortSelect.value;
+  switch (sortType) {
+    case 'price':
+      return books.sort(byPrice);
+    case 'author':
+      return books.sort(byAuthor);
+    case 'title':
+    default:
+      return books.sort(byTitle);
   }
 }
 
-function handleSearch(store, searchInput, sortToggle) {
+function handleSearch(store, searchInput, sortSelect) {
   return () => {
     const books = store.search(searchInput.value);
-    renderBooks(sortBooks(books, sortToggle));
+    renderBooks(sortBooks(books, sortSelect));
   };
 }
 
-function handleClear(store, searchInput, sortToggle) {
+function handleClear(store, searchInput, sortSelect) {
   return () => {
     searchInput.value = '';
     const books = store.clearSearch();
-    renderBooks(sortBooks(books, sortToggle));
+    renderBooks(sortBooks(books, sortSelect));
   };
 }
 
-function handleSortToggle(store, sortToggle) {
+function handleSortSelect(store, sortSelect) {
   return () => {
-    renderBooks(sortBooks(store.books, sortToggle));
+    renderBooks(sortBooks(store.books, sortSelect));
   };
 }
 
@@ -90,13 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('js-search-input');
   const searchButton = document.getElementById('js-search-btn');
   const clearButton = document.getElementById('js-clear-btn');
-  const sortToggle = document.getElementById('js-sort-toggle');
+  const sortSelect = document.getElementById('js-sort-select');
   const calculateButton = document.getElementById('js-calculate-btn');
 
   renderBooks(store.books);
 
-  searchButton.addEventListener('click', handleSearch(store, searchInput, sortToggle));
-  clearButton.addEventListener('click', handleClear(store, searchInput, sortToggle));
-  sortToggle.addEventListener('change', handleSortToggle(store, sortToggle));
+  searchButton.addEventListener('click', handleSearch(store, searchInput, sortSelect));
+  clearButton.addEventListener('click', handleClear(store, searchInput, sortSelect));
+  sortSelect.addEventListener('change', handleSortSelect(store, sortSelect));
   calculateButton.addEventListener('click', handleCalculate(store));
 });
