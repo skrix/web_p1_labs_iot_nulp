@@ -51,7 +51,8 @@ function sortBooks(books, sortSelect) {
 function handleSearch(store, searchInput, sortSelect) {
   return () => {
     const books = store.search(searchInput.value);
-    renderBooks(sortBooks(books, sortSelect));
+    currentBooks = sortBooks(books, sortSelect);
+    renderBooks(currentBooks);
   };
 }
 
@@ -59,19 +60,21 @@ function handleClear(store, searchInput, sortSelect) {
   return () => {
     searchInput.value = '';
     const books = store.clearSearch();
-    renderBooks(sortBooks(books, sortSelect));
+    currentBooks = sortBooks(books, sortSelect);
+    renderBooks(currentBooks);
   };
 }
 
 function handleSortSelect(store, sortSelect) {
   return () => {
-    renderBooks(sortBooks(store.books, sortSelect));
+    currentBooks = sortBooks(currentBooks, sortSelect);
+    renderBooks(currentBooks);
   };
 }
 
-function handleCalculate(store) {
+function handleCalculate() {
   return () => {
-    const totalPrice = store.calculateTotalPrice();
+    const totalPrice = currentBooks.reduce((total, book) => total + book.price, 0);
     const totalPriceElement = document.getElementById('js-total-price');
     totalPriceElement.textContent = `${totalPrice.toFixed(2)} UAH`;
   };
@@ -82,7 +85,8 @@ function handleRemove(store) {
     const bookId = parseInt(event.target.dataset.bookId);
     if (confirm('Are you sure you want to remove this book?')) {
       store.remove(bookId);
-      renderBooks(store.books);
+      currentBooks = currentBooks.filter(book => book.id !== bookId);
+      renderBooks(currentBooks);
     }
   };
 }
@@ -92,6 +96,8 @@ function handleEdit(event) {
   window.location.href = `../pages/edit.html?id=${bookId}`;
 }
 
+let currentBooks = [];
+
 document.addEventListener('DOMContentLoaded', () => {
   const store = window.store;
   const searchInput = document.getElementById('js-search-input');
@@ -100,10 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const sortSelect = document.getElementById('js-sort-select');
   const calculateButton = document.getElementById('js-calculate-btn');
 
-  renderBooks(store.books);
+  currentBooks = store.books;
+  renderBooks(currentBooks);
 
   searchButton.addEventListener('click', handleSearch(store, searchInput, sortSelect));
   clearButton.addEventListener('click', handleClear(store, searchInput, sortSelect));
   sortSelect.addEventListener('change', handleSortSelect(store, sortSelect));
-  calculateButton.addEventListener('click', handleCalculate(store));
+  calculateButton.addEventListener('click', handleCalculate());
 });
