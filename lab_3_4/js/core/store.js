@@ -12,7 +12,7 @@ class Store {
     if (storedBooks) {
       this.books = JSON.parse(storedBooks).map(book => new Book(book));
     } else {
-      // Initialize with default data if no stored data exists
+      // default data
       this.books = data.books.map(book => new Book(book));
       this.saveToStorage();
     }
