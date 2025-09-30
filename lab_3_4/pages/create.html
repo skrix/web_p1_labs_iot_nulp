@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Book - WeirdBooks</title>
+    <link rel="stylesheet" href="../css/application.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <ul class="nav__list">
+                <li>
+                    <a href="index.html" class="nav__item">WeirdBooks</a>
+                </li>
+                <li>
+                    <a href="index.html" class="nav__item">My Books</a>
+                </li>
+                <li>
+                    <a href="create.html" class="nav__item nav__item--active">Add Book</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <h1 class="form-title">Create book</h1>
+
+        <form class="form" id="create-form">
+            <div class="form-group">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" id="title" name="title" class="form-input" placeholder="Enter book title..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="author" class="form-label">Author</label>
+                <input type="text" id="author" name="author" class="form-input" placeholder="Enter author name..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" name="description" class="form-textarea" rows="4" placeholder="Enter book description..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="price" class="form-label">Price (UAH)</label>
+                <input type="number" id="price" name="price" class="form-input form-input--number" value="0.00" min="0" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="isbn" class="form-label">ISBN</label>
+                <input type="text" id="isbn" name="isbn" class="form-input" placeholder="978-0-00-000000-0" pattern="978-\d-\d{2}-\d{6}-\d" title="ISBN format: 978-X-XX-XXXXXX-X">
+            </div>
+
+            <div class="form-group">
+                <label for="genre" class="form-label">Genre</label>
+                <select id="genre" name="genre" class="form-select" required>
+                    <option value="">Select genre</option>
+
+                    <optgroup label="Fiction">
+                      <option value="fiction">General Fiction</option>
+                      <option value="literary_fiction">Literary Fiction</option>
+                      <option value="classic">Classic Literature</option>
+                      <option value="historical_fiction">Historical Fiction</option>
+                      <option value="science_fiction">Science Fiction</option>
+                      <option value="fantasy">Fantasy</option>
+                      <option value="mystery">Mystery</option>
+                      <option value="thriller">Thriller / Suspense</option>
+                      <option value="horror">Horror</option>
+                      <option value="romance">Romance</option>
+                      <option value="children">Children’s</option>
+                    </optgroup>
+
+                    <optgroup label="Non-Fiction">
+                      <option value="non_fiction">General Non-Fiction</option>
+                      <option value="biography">Biography / Memoir</option>
+                      <option value="history">History</option>
+                      <option value="science">Science</option>
+                      <option value="self_help">Self-Help</option>
+                      <option value="philosophy">Philosophy</option>
+                      <option value="religion">Religion / Spirituality</option>
+                      <option value="travel">Travel</option>
+                      <option value="true_crime">True Crime</option>
+                      <option value="art_design">Art & Design</option>
+                      <option value="cookbook">Cookbooks</option>
+                    </optgroup>
+
+                    <optgroup label="Other">
+                      <option value="poetry">Poetry</option>
+                      <option value="graphic_novel">Graphic Novels / Comics</option>
+                      <option value="drama">Drama / Plays</option>
+                      <option value="anthology">Anthologies</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--wide btn--large form-submit">Add book</button>
+        </form>
+
+        <br>
+
+        <div class="alert alert--error" id="js-error-alert" style="display: none;">
+            <span class="alert__text" id="js-error-text">Oh snap! Change a few things up and try submitting again.</span>
+            <a href="#" type="button" class="alert__close" id="close-alert">×</a>
+        </div>
+    </div>
+
+    <script type="module" src="../js/core/app.js"></script>
+    <script type="module" src="../js/pages/create.js"></script>
+</body>
+</html>
