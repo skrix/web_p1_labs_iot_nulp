@@ -18,7 +18,14 @@ app.get('/', (req, res) => {
 })
 
 const bookRoutes = require("./routes/book.routes");
+const userRoutes = require("./routes/user.routes");
+const orderRoutes = require("./routes/order.routes");
+const orderItemRoutes = require("./routes/orderItem.routes");
+
 app.use("/api/books", bookRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/order-items", orderItemRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
