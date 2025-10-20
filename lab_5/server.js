@@ -17,10 +17,8 @@ app.get('/', (req, res) => {
   res.json({ message: "Hello world!" });
 })
 
-// const itemRoutes = require("./src/routes / item.routes");
-
-// //** add next line only after creating Routes **
-// app.use('your middleware route', itemRoutes);
+const bookRoutes = require("./routes/book.routes");
+app.use("/api/books", bookRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
