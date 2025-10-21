@@ -1,0 +1,21 @@
+<article class="card">
+    <div class="card__image">
+        <img src="{{image_url}}" alt="">
+    </div>
+    <div class="card__content">
+        <h3 class="card__title">{{title}}</h3>
+        <p class="card__subtitle">{{author}}</p>
+        <p class="card__description">
+            {{description}}
+        </p>
+        <div class="card__details">
+            <span>Genre: {{genre}}</span>
+            <span>ISBN: {{isbn}}</span>
+            <span class="card__price">Price: {{price}} UAH</span>
+        </div>
+        <div class="card__actions">
+            <button type="button" class="btn btn--primary js-edit-btn" data-book-id="{{id}}">Edit</button>
+            <button type="button" class="btn btn--secondary js-remove-btn" data-book-id="{{id}}">Remove</button>
+        </div>
+    </div>
+</article>
