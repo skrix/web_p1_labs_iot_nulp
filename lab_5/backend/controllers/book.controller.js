@@ -15,21 +15,26 @@ exports.create = async (req, res) => {
 // Get all books
 exports.findAll = async (req, res) => {
   try {
-    let where = {};
-    if (req.query.title) {
-      where.title = { [Op.substring]: req.query.title };
+    const where = {};
+    const { search, orderBy, order, minPrice, maxPrice } = req.query;
+    where[Op.or] = [{ title: { [Op.substring]: search } }];
+
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price[Op.gte] = parseFloat(minPrice);
+      if (maxPrice) where.price[Op.lte] = parseFloat(maxPrice);
     }
-    if (req.query.isbn) {
-      where.isbn = { [Op.eq]: req.query.isbn };
-    }
-    const order = [];
-    if (req.query.sortBy) {
-      order.push([req.query.sortBy, req.query.order === "desc" ? "DESC" : "ASC"]);
-    }
-    const data = await Book.findAll({
-      where: Object.keys(where).length ? where : undefined,
-      order: order.length ? order : undefined
-    });
+
+    const options = {
+      where: (search || maxPrice || minPrice) ? where : undefined,
+      order: orderBy ? [[orderBy, order === "desc" ? "DESC" : "ASC"]] : undefined
+    };
+
+    console.log(Object.keys(where));
+    console.log(Object.keys(where).length);
+    console.log(where);
+    console.log(options);
+    const data = await Book.findAll(options);
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: err.message });

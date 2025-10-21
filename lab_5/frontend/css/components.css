@@ -182,3 +182,25 @@
     opacity: 1;
     text-decoration: none;
 }
+
+/* Loading and Error States */
+.loading,
+.error,
+.no-books {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 18px;
+    color: #6c757d;
+}
+
+.loading {
+    color: #007bff;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.no-books {
+    color: #6c757d;
+}

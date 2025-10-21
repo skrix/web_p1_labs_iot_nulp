@@ -18,6 +18,12 @@ function renderBookTemplate(book, template) {
 async function renderBooks(books) {
   const cardTemplate = await loadCardTemplate();
   const booksGrid = document.getElementById('books-grid');
+
+  if (books.length === 0) {
+    booksGrid.innerHTML = '<p class="no-books">No books found</p>';
+    return;
+  }
+
   booksGrid.innerHTML = books.map(book => renderBookTemplate(book, cardTemplate)).join('');
 
   const editBookButtons = document.querySelectorAll('.js-edit-btn');
@@ -31,45 +37,68 @@ async function renderBooks(books) {
   });
 }
 
-function byPrice(book1, book2) { return book1.price - book2.price };
-function byTitle(book1, book2) { return book1.title.localeCompare(book2.title) };
-function byAuthor(book1, book2) { return book1.author.localeCompare(book2.author) };
+function showLoading() {
+  const booksGrid = document.getElementById('books-grid');
+  booksGrid.innerHTML = '<p class="loading">Loading books...</p>';
+}
 
-function sortBooks(books, sortSelect) {
-  const sortType = sortSelect.value;
-  switch (sortType) {
-    case 'price':
-      return books.sort(byPrice);
-    case 'author':
-      return books.sort(byAuthor);
-    case 'title':
-    default:
-      return books.sort(byTitle);
+function showError(message) {
+  const booksGrid = document.getElementById('books-grid');
+  booksGrid.innerHTML = `<p class="error">Error: ${message}</p>`;
+}
+
+function buildSearchParams(searchInput, sortSelect) {
+  const params = {};
+
+  // Add search term if provided
+  const searchValue = searchInput.value.trim();
+  if (searchValue) {
+    params.search = searchValue;
+  }
+
+  // Add sorting parameters
+  if (sortSelect && sortSelect.value) {
+    params.orderBy = sortSelect.value;
+    params.order = 'asc'; // Default to ascending
+  }
+
+  return params;
+}
+
+// Perform search and render results
+async function performSearch(store, searchInput, sortSelect) {
+  try {
+    showLoading();
+    const searchParams = buildSearchParams(searchInput, sortSelect);
+    const books = await store.search(searchParams);
+    currentBooks = books;
+    await renderBooks(currentBooks);
+  } catch (error) {
+    showError(error.message);
   }
 }
 
 function handleSearch(store, searchInput, sortSelect) {
-  return () => {
-    const books = store.search(searchInput.value);
-    currentBooks = sortBooks(books, sortSelect);
-    renderBooks(currentBooks);
-  };
+  return () => performSearch(store, searchInput, sortSelect);
 }
 
 function handleClear(store, searchInput, sortSelect) {
-  return () => {
+  return async () => {
     searchInput.value = '';
-    const books = store.clearSearch();
-    currentBooks = sortBooks(books, sortSelect);
-    renderBooks(currentBooks);
+
+    try {
+      showLoading();
+      const books = await store.clearSearch();
+      currentBooks = books;
+      await renderBooks(currentBooks);
+    } catch (error) {
+      showError(error.message);
+    }
   };
 }
 
-function handleSortSelect(store, sortSelect) {
-  return () => {
-    currentBooks = sortBooks(currentBooks, sortSelect);
-    renderBooks(currentBooks);
-  };
+function handleSortSelect(store, searchInput, sortSelect) {
+  return () => performSearch(store, searchInput, sortSelect);
 }
 
 function handleCalculate() {
@@ -81,12 +110,16 @@ function handleCalculate() {
 }
 
 function handleRemove(store) {
-  return (event) => {
+  return async (event) => {
     const bookId = parseInt(event.target.dataset.bookId);
     if (confirm('Are you sure you want to remove this book?')) {
-      store.remove(bookId);
-      currentBooks = currentBooks.filter(book => book.id !== bookId);
-      renderBooks(currentBooks);
+      try {
+        await store.remove(bookId);
+        currentBooks = currentBooks.filter(book => book.id !== bookId);
+        await renderBooks(currentBooks);
+      } catch (error) {
+        alert(`Failed to remove book: ${error.message}`);
+      }
     }
   };
 }
@@ -98,7 +131,7 @@ function handleEdit(event) {
 
 let currentBooks = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const store = window.store;
   const searchInput = document.getElementById('js-search-input');
   const searchButton = document.getElementById('js-search-btn');
@@ -106,11 +139,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const sortSelect = document.getElementById('js-sort-select');
   const calculateButton = document.getElementById('js-calculate-btn');
 
-  currentBooks = store.books;
-  renderBooks(currentBooks);
+
+  try {
+    showLoading();
+    await store.loadBooks();
+    currentBooks = store.books;
+    await renderBooks(currentBooks);
+  } catch (error) {
+    showError(error.message);
+  }
 
   searchButton.addEventListener('click', handleSearch(store, searchInput, sortSelect));
   clearButton.addEventListener('click', handleClear(store, searchInput, sortSelect));
-  sortSelect.addEventListener('change', handleSortSelect(store, sortSelect));
+  sortSelect.addEventListener('change', handleSortSelect(store, searchInput, sortSelect));
   calculateButton.addEventListener('click', handleCalculate());
+
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      searchButton.click();
+    }
+  });
 });

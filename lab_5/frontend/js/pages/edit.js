@@ -5,7 +5,7 @@ function getBookIdFromUrl() {
   return parseInt(urlParams.get('id'));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const store = window.store;
   const bookId = getBookIdFromUrl();
 
@@ -14,16 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const book = store.books.find(book => book.id === bookId);
+  let book;
+  try {
+    book = await store.getBook(bookId);
+  } catch (error) {
+    alert(`Failed to load book: ${error.message}`);
+    window.location.href = '../pages/index.html';
+    return;
+  }
 
   if (!book) {
     window.location.href = '../pages/index.html';
     return;
   }
 
-  const handleEdit = (formData, originalBook) => {
-    store.update(originalBook.id, formData);
-    window.location.href = '../pages/index.html';
+  const handleEdit = async (formData, originalBook) => {
+    try {
+      await store.update(originalBook.id, formData);
+      window.location.href = '../pages/index.html';
+    } catch (error) {
+      alert(`Failed to update book: ${error.message}`);
+    }
   };
 
   new BookForm('edit-form', book, handleEdit);
