@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const db = require("../models");
 const Book = db.Book;
 
@@ -14,7 +15,21 @@ exports.create = async (req, res) => {
 // Get all books
 exports.findAll = async (req, res) => {
   try {
-    const data = await Book.findAll();
+    let where = {};
+    if (req.query.title) {
+      where.title = { [Op.substring]: req.query.title };
+    }
+    if (req.query.isbn) {
+      where.isbn = { [Op.eq]: req.query.isbn };
+    }
+    const order = [];
+    if (req.query.sortBy) {
+      order.push([req.query.sortBy, req.query.order === "desc" ? "DESC" : "ASC"]);
+    }
+    const data = await Book.findAll({
+      where: Object.keys(where).length ? where : undefined,
+      order: order.length ? order : undefined
+    });
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: err.message });
