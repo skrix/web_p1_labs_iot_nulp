@@ -1,13 +1,15 @@
 import { memo } from "react";
+import { Link } from "react-router";
 
 interface ProductCardProps {
+  id: number;
   title: string;
   description: string;
   price: number;
   image: string;
 }
 
-export const ProductCard = memo(function ProductCard({ title, description, price, image }: ProductCardProps) {
+export const ProductCard = memo(function ProductCard({ id, title, description, price, image }: ProductCardProps) {
   return (
     <div className="bg-white dark:bg-gray-900 overflow-hidden flex flex-col border border-gray-300 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white transition-colors h-full">
       <div className="p-4 flex flex-col h-full">
@@ -28,7 +30,9 @@ export const ProductCard = memo(function ProductCard({ title, description, price
           </div>
 
           <button className="w-full bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black py-3 font-medium transition-colors cursor-pointer">
-            Переглянути
+            <Link to={`/product/${id}`} className="block">
+              Переглянути
+            </Link>
           </button>
         </div>
       </div>

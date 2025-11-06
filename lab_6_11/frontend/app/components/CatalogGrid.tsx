@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { ProductCard } from "./ProductCard";
 import productImage from "../assets/product.jpg";
 
-const PRODUCTS_DATA = [
+export const PRODUCTS_DATA = [
   {
     title: "RAYDROP Пуровер",
     description: "Пуровер ручної роботи з харчової нержавіючої сталі AISI 304 для заварювання кави методом V60. Українське виробництво",
@@ -83,6 +83,7 @@ export function CatalogGrid() {
       PRODUCTS_DATA.map((product, index) => (
         <ProductCard
           key={index}
+          id={index}
           title={product.title}
           description={product.description}
           price={product.price}
