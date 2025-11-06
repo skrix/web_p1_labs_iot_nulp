@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-300 py-8">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex justify-between items-start mb-8 flex-col gap-5 lg:flex-row">
           <div>
             <h3 className="font-semibold text-lg mb-2">Vasyl&Co</h3>
             <p className="text-gray-600 text-sm max-w-xs">
@@ -18,7 +18,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-300 pt-4 text-center text-sm text-gray-600">
-          2024 © Vasyl&Co. All rights reserved.
+          2025 © Vasyl&Co. All rights reserved.
         </div>
       </div>
     </footer>
