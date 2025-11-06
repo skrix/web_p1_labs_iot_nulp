@@ -4,24 +4,33 @@ import { useProducts } from "../context/ProductsContext";
 
 interface CatalogGridProps {
   searchQuery?: string;
+  category?: string;
 }
 
-export function CatalogGrid({ searchQuery = "" }: CatalogGridProps) {
+export function CatalogGrid({ searchQuery = "", category = "" }: CatalogGridProps) {
   const { products } = useProducts();
 
   const filteredProducts = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return products;
+    let filtered = products;
+
+    // Filter by category
+    if (category) {
+      filtered = filtered.filter((product) => product.category === category);
     }
 
-    const query = searchQuery.toLowerCase();
-    return products.filter((product) => {
-      return (
-        product.title.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query)
-      );
-    });
-  }, [products, searchQuery]);
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((product) => {
+        return (
+          product.title.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query)
+        );
+      });
+    }
+
+    return filtered;
+  }, [products, searchQuery, category]);
 
   const productCards = useMemo(
     () =>

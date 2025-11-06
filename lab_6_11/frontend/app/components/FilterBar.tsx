@@ -6,17 +6,23 @@ import { FilterDropdown } from "./FilterDropdown";
 
 interface FilterBarProps {
   onSearchChange: (search: string) => void;
+  onCategoryChange: (category: string) => void;
 }
 
-export function FilterBar({ onSearchChange }: FilterBarProps) {
-  const [filter1, setFilter1] = useState("");
-  const [filter2, setFilter2] = useState("");
-  const [filter3, setFilter3] = useState("");
+export function FilterBar({ onSearchChange, onCategoryChange }: FilterBarProps) {
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterMaterial, setFilterMaterial] = useState("");
+  const [filterPrice, setFilterPrice] = useState("");
   const [search, setSearch] = useState("");
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
     onSearchChange(value);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setFilterCategory(value);
+    onCategoryChange(value);
   };
 
   const categoryOptions = [
@@ -59,22 +65,22 @@ export function FilterBar({ onSearchChange }: FilterBarProps) {
           {/* Filter Dropdowns */}
           <div className="flex flex-col sm:flex-row gap-4 flex-1 w-full md:w-auto">
             <FilterDropdown
-              value={filter1}
-              onChange={setFilter1}
+              value={filterCategory}
+              onChange={handleCategoryChange}
               label="Категорія"
               options={categoryOptions}
             />
 
             <FilterDropdown
-              value={filter2}
-              onChange={setFilter2}
+              value={filterMaterial}
+              onChange={setFilterMaterial}
               label="Матеріал"
               options={materialOptions}
             />
 
             <FilterDropdown
-              value={filter3}
-              onChange={setFilter3}
+              value={filterPrice}
+              onChange={setFilterPrice}
               label="Ціна"
               options={priceOptions}
             />
