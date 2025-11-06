@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PRODUCTS_DATA } from "./CatalogGrid";
+import { useProducts } from "../context/ProductsContext";
 
 interface ProductDetailsProps {
   productId: string;
@@ -12,7 +12,12 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState("1");
   const [selectedOption, setSelectedOption] = useState("");
 
-  const product = PRODUCTS_DATA[parseInt(productId)] || PRODUCTS_DATA[0];
+  const { getProductById } = useProducts();
+  const product = getProductById(parseInt(productId)) || getProductById(0);
+
+  if (!product) {
+    return <div>Товар не знайдено</div>;
+  }
 
   const characteristics = product.title.includes("Аеропрес")
     ? ["Портативний", "Швидке заварювання"]
