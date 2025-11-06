@@ -9,10 +9,37 @@ export function FilterBar() {
   const [filter2, setFilter2] = useState("");
   const [filter3, setFilter3] = useState("");
 
-  const filterOptions = [
-    { value: "option1", label: "Опція 1" },
-    { value: "option2", label: "Опція 2" },
-    { value: "option3", label: "Опція 3" },
+  const categoryOptions = [
+    { value: "pourover", label: "Пуровери" },
+    { value: "chemex", label: "Кемекси" },
+    { value: "aeropress", label: "Аеропреси" },
+    { value: "filters", label: "Фільтри" },
+    { value: "kettles", label: "Чайники" },
+    { value: "servers", label: "Сервери" },
+    { value: "scales", label: "Ваги" },
+    { value: "grinders", label: "Кавомолки" },
+    { value: "accessories", label: "Аксесуари" },
+  ];
+
+  const materialOptions = [
+    { value: "steel", label: "Нержавіюча сталь" },
+    { value: "ceramic", label: "Кераміка" },
+    { value: "glass", label: "Скло" },
+    { value: "plastic", label: "Пластик" },
+    { value: "copper", label: "Мідь" },
+    { value: "aluminum", label: "Алюміній" },
+    { value: "wood", label: "Дерево" },
+    { value: "silicone", label: "Силікон" },
+  ];
+
+  const priceOptions = [
+    { value: "0-300", label: "До 300 ₴" },
+    { value: "300-600", label: "300-600 ₴" },
+    { value: "600-1000", label: "600-1000 ₴" },
+    { value: "1000-1500", label: "1000-1500 ₴" },
+    { value: "1500-2000", label: "1500-2000 ₴" },
+    { value: "2000-3000", label: "2000-3000 ₴" },
+    { value: "3000+", label: "Понад 3000 ₴" },
   ];
 
   return (
@@ -24,22 +51,22 @@ export function FilterBar() {
             <FilterDropdown
               value={filter1}
               onChange={setFilter1}
-              label="Filter 1"
-              options={filterOptions}
+              label="Категорія"
+              options={categoryOptions}
             />
 
             <FilterDropdown
               value={filter2}
               onChange={setFilter2}
-              label="Filter 2"
-              options={filterOptions}
+              label="Матеріал"
+              options={materialOptions}
             />
 
             <FilterDropdown
               value={filter3}
               onChange={setFilter3}
-              label="Filter 3"
-              options={filterOptions}
+              label="Ціна"
+              options={priceOptions}
             />
           </div>
 
@@ -50,7 +77,7 @@ export function FilterBar() {
 
           {/* Apply Button */}
           <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer">
-            Apply
+            Застосувати
           </button>
         </div>
       </div>
