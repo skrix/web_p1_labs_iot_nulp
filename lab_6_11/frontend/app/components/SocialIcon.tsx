@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 interface SocialIconProps {
   href: string;
   ariaLabel: string;
@@ -6,7 +8,7 @@ interface SocialIconProps {
   children: React.ReactNode;
 }
 
-export function SocialIcon({ href, ariaLabel, bgColor, hoverColor, children }: SocialIconProps) {
+export const SocialIcon = memo(function SocialIcon({ href, ariaLabel, bgColor, hoverColor, children }: SocialIconProps) {
   return (
     <a
       href={href}
@@ -18,4 +20,4 @@ export function SocialIcon({ href, ariaLabel, bgColor, hoverColor, children }: S
       {children}
     </a>
   );
-}
+});

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { SocialIcon } from "./SocialIcon";
 
 const SOCIAL_LINKS = [
@@ -48,9 +49,9 @@ const SOCIAL_LINKS = [
 ] as const;
 
 export function SocialLinks() {
-  return (
-    <div className="flex gap-3">
-      {SOCIAL_LINKS.map((link) => (
+  const socialIcons = useMemo(
+    () =>
+      SOCIAL_LINKS.map((link) => (
         <SocialIcon
           key={link.name}
           href={link.href}
@@ -60,7 +61,9 @@ export function SocialLinks() {
         >
           {link.icon}
         </SocialIcon>
-      ))}
-    </div>
+      )),
+    []
   );
+
+  return <div className="flex gap-3">{socialIcons}</div>;
 }

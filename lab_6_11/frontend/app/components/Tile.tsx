@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 interface TileProps {
   title: string;
   description: string;
@@ -5,10 +7,10 @@ interface TileProps {
   icon: React.ReactNode;
 }
 
-export function Tile({ title, description, bgColor, icon }: TileProps) {
+export const Tile = memo(function Tile({ title, description, bgColor, icon }: TileProps) {
   return (
     <div className="flex flex-col items-center">
-      <div className={`aspect-[4/3] w-full ${bgColor} mb-4 flex items-center justify-center relative rounded-lg shadow-md`}>
+      <div className={`aspect-4/3 w-full ${bgColor} mb-4 flex items-center justify-center relative rounded-lg shadow-md`}>
         {icon}
       </div>
       <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
@@ -17,4 +19,4 @@ export function Tile({ title, description, bgColor, icon }: TileProps) {
       </p>
     </div>
   );
-}
+});
