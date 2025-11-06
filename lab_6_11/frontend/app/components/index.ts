@@ -4,6 +4,7 @@ export { Footer } from "./Footer";
 export { Hero } from "./Hero";
 export { Tile } from "./Tile";
 export { TilesSection } from "./TilesSection";
+export { ProductsSection } from "./ProductsSection";
 export { Logo } from "./Logo";
 export { TypingText } from "./TypingText";
 export { FilterDropdown } from "./FilterDropdown";
