@@ -14,6 +14,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Catalog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
 
   return (
     <Layout>
@@ -21,10 +22,12 @@ export default function Catalog() {
         <FilterBar
           onSearchChange={setSearchQuery}
           onCategoryChange={setCategory}
+          onBrandChange={setBrand}
         />
         <CatalogGrid
           searchQuery={searchQuery}
           category={category}
+          brand={brand}
         />
       </div>
     </Layout>

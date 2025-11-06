@@ -7,11 +7,12 @@ import { FilterDropdown } from "./FilterDropdown";
 interface FilterBarProps {
   onSearchChange: (search: string) => void;
   onCategoryChange: (category: string) => void;
+  onBrandChange: (brand: string) => void;
 }
 
-export function FilterBar({ onSearchChange, onCategoryChange }: FilterBarProps) {
+export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange }: FilterBarProps) {
   const [filterCategory, setFilterCategory] = useState("");
-  const [filterMaterial, setFilterMaterial] = useState("");
+  const [filterBrand, setFilterBrand] = useState("");
   const [filterPrice, setFilterPrice] = useState("");
   const [search, setSearch] = useState("");
 
@@ -23,6 +24,11 @@ export function FilterBar({ onSearchChange, onCategoryChange }: FilterBarProps) 
   const handleCategoryChange = (value: string) => {
     setFilterCategory(value);
     onCategoryChange(value);
+  };
+
+  const handleBrandChange = (value: string) => {
+    setFilterBrand(value);
+    onBrandChange(value);
   };
 
   const categoryOptions = [
@@ -37,15 +43,15 @@ export function FilterBar({ onSearchChange, onCategoryChange }: FilterBarProps) 
     { value: "accessories", label: "Аксесуари" },
   ];
 
-  const materialOptions = [
-    { value: "steel", label: "Нержавіюча сталь" },
-    { value: "ceramic", label: "Кераміка" },
-    { value: "glass", label: "Скло" },
-    { value: "plastic", label: "Пластик" },
-    { value: "copper", label: "Мідь" },
-    { value: "aluminum", label: "Алюміній" },
-    { value: "wood", label: "Дерево" },
-    { value: "silicone", label: "Силікон" },
+  const brandOptions = [
+    { value: "vasyl-co", label: "Vasyl&Co" },
+    { value: "chemex", label: "Chemex" },
+    { value: "aeropress", label: "AeroPress" },
+    { value: "dotyk", label: "Дотик (Dotyk)" },
+    { value: "sibarist", label: "SIBARIST" },
+    { value: "samadoyo", label: "Samadoyo" },
+    { value: "hario", label: "Hario" },
+    { value: "generic", label: "Інші" },
   ];
 
   const priceOptions = [
@@ -72,10 +78,10 @@ export function FilterBar({ onSearchChange, onCategoryChange }: FilterBarProps) 
             />
 
             <FilterDropdown
-              value={filterMaterial}
-              onChange={setFilterMaterial}
-              label="Матеріал"
-              options={materialOptions}
+              value={filterBrand}
+              onChange={handleBrandChange}
+              label="Бренд"
+              options={brandOptions}
             />
 
             <FilterDropdown
