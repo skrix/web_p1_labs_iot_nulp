@@ -19,19 +19,19 @@ export function Header() {
               to="/"
               className="px-6 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition-colors backdrop-blur-sm"
             >
-              Home
+              Головна
             </Link>
             <Link
               to="/catalog"
               className="px-6 py-2 hover:text-gray-300 transition-colors"
             >
-              Catalog
+              Магазин
             </Link>
             <Link
               to="/cart"
               className="px-6 py-2 hover:text-gray-300 transition-colors"
             >
-              Cart
+              Кошик
             </Link>
           </nav>
 
@@ -55,21 +55,21 @@ export function Header() {
               onClick={() => setIsMenuOpen(false)}
               className="px-6 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition-colors backdrop-blur-sm text-center"
             >
-              Home
+              Головна
             </Link>
             <Link
               to="/catalog"
               onClick={() => setIsMenuOpen(false)}
               className="px-6 py-2 hover:text-gray-300 transition-colors text-center"
             >
-              Catalog
+              Магазин
             </Link>
             <Link
               to="/cart"
               onClick={() => setIsMenuOpen(false)}
               className="px-6 py-2 hover:text-gray-300 transition-colors text-center"
             >
-              Cart
+              Кошик
             </Link>
           </nav>
         )}

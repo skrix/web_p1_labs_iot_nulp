@@ -4,7 +4,7 @@ import { RaydropText } from "./hero/RaydropText";
 
 export function Hero() {
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative h-screen w-full overflow-hidden bg-black">
       <div className="absolute left-1/4 md:left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 scale-500 sm:scale-200 md:scale-300 lg:scale-500">
         <RaydropProduct />
       </div>
