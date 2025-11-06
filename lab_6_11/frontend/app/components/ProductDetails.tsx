@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProducts } from "../context/ProductsContext";
+import type { Product } from "../context/ProductsContext";
 
 interface ProductDetailsProps {
   productId: string;
@@ -11,57 +12,74 @@ interface ProductDetailsProps {
 export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState("1");
   const [selectedOption, setSelectedOption] = useState("");
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const { getProductById } = useProducts();
-  const product = getProductById(parseInt(productId)) || getProductById(0);
 
-  if (!product) {
-    return <div>Товар не знайдено</div>;
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      const data = await getProductById(parseInt(productId));
+      setProduct(data);
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [productId, getProductById]);
+
+  if (loading) {
+    return (
+      <div className="text-center py-16">
+        <p className="text-gray-500 dark:text-gray-400 text-lg">
+          Завантаження...
+        </p>
+      </div>
+    );
   }
 
-  const characteristics = product.title.includes("Аеропрес")
-    ? ["Портативний", "Швидке заварювання"]
-    : product.title.includes("Кемекс")
-    ? ["Класичний дизайн", "Скло"]
-    : ["Преміум якість", "Українське"];
+  if (!product) {
+    return (
+      <div className="text-center py-16">
+        <p className="text-red-500 text-lg">Товар не знайдено</p>
+        <button
+          onClick={onBack}
+          className="mt-4 px-8 py-3 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 font-medium transition-colors"
+        >
+          Повернутися
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-        {/* Product Image */}
         <div className="bg-gray-200 dark:bg-gray-800 aspect-square flex items-center justify-center">
           <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
         </div>
 
-        {/* Product Info */}
         <div className="flex flex-col">
-          {/* Characteristics Tags */}
           <div className="flex gap-3 mb-6">
-            {characteristics.map((char, index) => (
+            {product.categories.map((category) => (
               <span
-                key={index}
-                className={`px-4 py-2 text-sm font-medium text-white ${
-                  index === 0 ? "bg-gray-800 dark:bg-gray-700" : "bg-teal-600 dark:bg-teal-700"
-                }`}
+                key={category.id}
+                className="px-4 py-2 text-sm font-medium text-white bg-gray-800 dark:bg-gray-700"
               >
-                {char}
+                {category.label}
               </span>
             ))}
           </div>
 
-          {/* Product Title */}
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
             {product.title}
           </h1>
 
-          {/* Product Description */}
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
             {product.description}
           </p>
 
-          {/* Fields */}
           <div className="grid grid-cols-2 gap-4 mb-8">
-            {/* Countable Field */}
             <div>
               <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">
                 Кількість
@@ -75,7 +93,7 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
               />
             </div>
 
-            {/* Selectable Field */}
+            {/* TODO: update with product variants from backend */}
             <div>
               <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">
                 Варіант

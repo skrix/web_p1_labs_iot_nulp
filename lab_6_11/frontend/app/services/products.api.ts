@@ -1,6 +1,6 @@
 import apiClient from './api';
-import axios from 'axios';
-import type { Product } from '../context/ProductsContext';
+import type { Category } from './categories.api';
+import type { Brand } from './brands.api';
 
 export interface ProductFilters {
   category?: string;
@@ -8,19 +8,6 @@ export interface ProductFilters {
   minPrice?: number;
   maxPrice?: number;
   search?: string;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  label: string;
-}
-
-export interface Brand {
-  id: number;
-  name: string;
-  slug: string;
 }
 
 export interface Product {
@@ -54,12 +41,12 @@ export const productsApi = {
     return response.data;
   },
 
-  create: async (product: Omit<Product, 'id'>): Promise<Product> => {
+  create: async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<Product> => {
     const response = await apiClient.post<Product>('/products', product);
     return response.data;
   },
 
-  update: async (id: number, product: Partial<Product>): Promise<Product> => {
+  update: async (id: number, product: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Product> => {
     const response = await apiClient.put<Product>(`/products/${id}`, product);
     return response.data;
   },
