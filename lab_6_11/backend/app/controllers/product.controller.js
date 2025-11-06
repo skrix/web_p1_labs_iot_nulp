@@ -68,8 +68,8 @@ exports.findAll = async (req, res) => {
 
     if (search) {
       whereClause[db.Sequelize.Op.or] = [
-        { title: { [db.Sequelize.Op.iLike]: `%${search}%` } },
-        { description: { [db.Sequelize.Op.iLike]: `%${search}%` } }
+        { title: { [db.Sequelize.Op.like]: `%${search}%` } },
+        { description: { [db.Sequelize.Op.like]: `%${search}%` } }
       ];
     }
 
