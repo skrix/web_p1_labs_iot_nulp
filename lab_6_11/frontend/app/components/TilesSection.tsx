@@ -6,8 +6,8 @@ export function TilesSection() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <Tile
-            title="Premium Accessories"
-            description="Hand-crafted pour-over drippers, precision scales, temperature-controlled kettles, and premium grinders. Every tool designed to extract the perfect flavor from your beans."
+            title="Преміальні аксесуари"
+            description="Пуровери ручної роботи з нержавіючої сталі, точні ваги, чайники з контролем температури та преміальні млинки. Кожен інструмент створений для ідеального заварювання кави."
             bgColor="bg-slate-200"
             icon={
               <svg className="w-32 h-32 text-slate-700" fill="currentColor" viewBox="0 0 24 24">
@@ -17,8 +17,8 @@ export function TilesSection() {
             }
           />
           <Tile
-            title="Precision Filters"
-            description="Premium paper and metal filters engineered for optimal extraction. Choose from V60, Chemex, AeroPress, and specialty filters that highlight your coffee's unique characteristics."
+            title="Прецизійні фільтри"
+            description="Паперові та металеві фільтри преміум-класу для оптимальної екстракції. V60, Chemex, AeroPress та спеціальні фільтри, які розкривають унікальні характеристики вашої кави."
             bgColor="bg-amber-200"
             icon={
               <svg className="w-32 h-32 text-amber-700" fill="currentColor" viewBox="0 0 24 24">
@@ -28,8 +28,8 @@ export function TilesSection() {
             }
           />
           <Tile
-            title="Artisan Coffee Beans"
-            description="Single-origin, micro-lot beans from award-winning farms. Light to medium roasts that showcase the terroir, carefully sourced and roasted to reveal complex flavor profiles."
+            title="Елітна кава"
+            description="Моносортова кава з найкращих мікро-плантацій. Світле та середнє обсмажування, яке підкреслює терруар, ретельно відібране та обсмажене для розкриття складних смакових профілів."
             bgColor="bg-orange-200"
             icon={
               <svg className="w-32 h-32 text-orange-700" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ export function TilesSection() {
         </div>
         <div className="flex justify-center">
           <button className="px-8 py-3 bg-gray-700 hover:bg-gray-800 text-white font-medium rounded transition-colors">
-            View more
+            Переглянути більше
           </button>
         </div>
       </div>
