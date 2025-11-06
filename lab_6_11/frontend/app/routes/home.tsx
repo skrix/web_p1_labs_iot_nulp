@@ -5,8 +5,8 @@ import { TilesSection } from "../components/TilesSection";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Third Wave Coffee Shop - Premium Accessories, Filters & Beans" },
-    { name: "description", content: "Discover premium coffee accessories, precision filters, and artisan beans for third wave coffee enthusiasts. Elevate your coffee experience." },
+    { title: "Vasyl&Co - RAYDROP" },
+    { name: "description", content: "Vasyl&Co RayDrop — це пуровер ручної роботи з харчової нержавіючої сталі AISI 304 для заварювання кави." },
   ];
 }
 
