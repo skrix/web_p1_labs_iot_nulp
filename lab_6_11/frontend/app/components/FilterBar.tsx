@@ -16,7 +16,7 @@ export function FilterBar() {
   ];
 
   return (
-    <div className="bg-white py-6 mb-8">
+    <div className="bg-white dark:bg-gray-950 py-6 mb-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-4 items-center">
           {/* Filter Dropdowns */}
@@ -49,7 +49,7 @@ export function FilterBar() {
           </div>
 
           {/* Apply Button */}
-          <button className="px-8 py-3 bg-black hover:bg-black/50 text-white font-medium whitespace-nowrap transition-colors cursor-pointer">
+          <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer">
             Apply
           </button>
         </div>

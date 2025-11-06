@@ -13,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Catalog() {
   return (
     <Layout>
-      <div className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-24 bg-white dark:bg-gray-950 min-h-screen">
         <FilterBar />
         <CatalogGrid />
       </div>
