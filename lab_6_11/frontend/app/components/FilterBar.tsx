@@ -4,10 +4,20 @@ import { useState } from "react";
 import { SearchBar } from "./SearchBar";
 import { FilterDropdown } from "./FilterDropdown";
 
-export function FilterBar() {
+interface FilterBarProps {
+  onSearchChange: (search: string) => void;
+}
+
+export function FilterBar({ onSearchChange }: FilterBarProps) {
   const [filter1, setFilter1] = useState("");
   const [filter2, setFilter2] = useState("");
   const [filter3, setFilter3] = useState("");
+  const [search, setSearch] = useState("");
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    onSearchChange(value);
+  };
 
   const categoryOptions = [
     { value: "pourover", label: "Пуровери" },
@@ -72,7 +82,7 @@ export function FilterBar() {
 
           {/* Search Bar */}
           <div className="w-full md:w-80">
-            <SearchBar />
+            <SearchBar value={search} onChange={handleSearchChange} />
           </div>
 
           {/* Apply Button */}
