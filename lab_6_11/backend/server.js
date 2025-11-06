@@ -20,10 +20,12 @@ app.get('/api', (req, res) => {
 const userRoutes = require("./app/routes/user.routes");
 const productRoutes = require("./app/routes/product.routes");
 const categoryRoutes = require("./app/routes/category.routes");
+const brandRoutes = require("./app/routes/brand.routes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/brands", brandRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
