@@ -13,6 +13,4 @@ export { SearchBar } from "./SearchBar";
 export { CatalogGrid } from "./CatalogGrid";
 export { ProductCard } from "./ProductCard";
 export { ProductDetails } from "./ProductDetails";
-
 export { useProducts } from "../context/ProductsContext";
-export type { Product } from "../context/ProductsContext";

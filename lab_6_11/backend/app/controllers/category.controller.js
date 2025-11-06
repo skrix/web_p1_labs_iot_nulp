@@ -2,7 +2,6 @@ const db = require("../models");
 const Category = db.Category;
 const Product = db.Product;
 
-// Create a new Category
 exports.create = async (req, res) => {
   try {
     const data = await Category.create(req.body);
@@ -12,7 +11,6 @@ exports.create = async (req, res) => {
   }
 };
 
-// Get all categories
 exports.findAll = async (req, res) => {
   try {
     const { includeProducts } = req.query;
@@ -21,7 +19,6 @@ exports.findAll = async (req, res) => {
       order: [['name', 'ASC']]
     };
 
-    // Optionally include products
     if (includeProducts === 'true') {
       options.include = [{
         model: Product,
@@ -38,7 +35,6 @@ exports.findAll = async (req, res) => {
   }
 };
 
-// Get a single category by id
 exports.findOne = async (req, res) => {
   try {
     const { includeProducts } = req.query;
@@ -67,36 +63,6 @@ exports.findOne = async (req, res) => {
   }
 };
 
-// Get a category by slug
-exports.findBySlug = async (req, res) => {
-  try {
-    const { includeProducts } = req.query;
-
-    const options = {
-      where: { slug: req.params.slug }
-    };
-
-    if (includeProducts === 'true') {
-      options.include = [{
-        model: Product,
-        as: 'products',
-        through: { attributes: [] }
-      }];
-    }
-
-    const data = await Category.findOne(options);
-
-    if (!data) {
-      return res.status(404).json({ message: "Category not found" });
-    }
-
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// Update a category
 exports.update = async (req, res) => {
   try {
     const [num] = await Category.update(req.body, {
@@ -114,7 +80,6 @@ exports.update = async (req, res) => {
   }
 };
 
-// Delete a category
 exports.delete = async (req, res) => {
   try {
     const num = await Category.destroy({

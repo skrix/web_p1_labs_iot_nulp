@@ -1,7 +1,6 @@
 const db = require("../models");
 const User = db.User;
 
-// Create a new User
 exports.create = async (req, res) => {
   try {
     const data = await User.create(req.body);
@@ -11,7 +10,6 @@ exports.create = async (req, res) => {
   }
 };
 
-// Get all users
 exports.findAll = async (req, res) => {
   try {
     const data = await User.findAll();
@@ -21,7 +19,6 @@ exports.findAll = async (req, res) => {
   }
 };
 
-// Get a single user by id
 exports.findOne = async (req, res) => {
   try {
     const data = await User.findByPk(req.params.id);
@@ -32,7 +29,6 @@ exports.findOne = async (req, res) => {
   }
 };
 
-// Update a user
 exports.update = async (req, res) => {
   try {
     const [num] = await User.update(req.body, {
@@ -45,7 +41,6 @@ exports.update = async (req, res) => {
   }
 };
 
-// Delete a user
 exports.delete = async (req, res) => {
   try {
     const num = await User.destroy({ where: { id: req.params.id } });
