@@ -1,21 +1,20 @@
 const db = require("../models");
 const Product = db.Product;
 const Category = db.Category;
+const Brand = db.Brand;
 
-// Create a new Product
 exports.create = async (req, res) => {
   try {
-    const { title, description, price, image, brand, categoryIds } = req.body;
+    const { title, description, price, image, brandId, categoryIds } = req.body;
 
     const product = await Product.create({
       title,
       description,
       price,
       image,
-      brand
+      brandId
     });
 
-    // If categoryIds are provided, associate them with the product
     if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
       const categories = await Category.findAll({
         where: { id: categoryIds }
@@ -23,14 +22,20 @@ exports.create = async (req, res) => {
       await product.setCategories(categories);
     }
 
-    // Fetch the product with categories
     const createdProduct = await Product.findByPk(product.id, {
-      include: [{
-        model: Category,
-        as: 'categories',
-        attributes: ['id', 'name', 'slug', 'label'],
-        through: { attributes: [] }
-      }]
+      include: [
+        {
+          model: Category,
+          as: 'categories',
+          attributes: ['id', 'name', 'slug', 'label'],
+          through: { attributes: [] }
+        },
+        {
+          model: Brand,
+          as: 'brand',
+          attributes: ['id', 'name', 'slug']
+        }
+      ]
     });
 
     res.status(201).json(createdProduct);
@@ -39,26 +44,28 @@ exports.create = async (req, res) => {
   }
 };
 
-// Get all products
 exports.findAll = async (req, res) => {
   try {
     const { category, brand, minPrice, maxPrice, search } = req.query;
 
     let whereClause = {};
+    let brandInclude = {
+      model: Brand,
+      as: 'brand',
+      attributes: ['id', 'name', 'slug']
+    };
 
-    // Filter by brand
     if (brand) {
-      whereClause.brand = brand;
+      brandInclude.where = { slug: brand };
+      brandInclude.required = true;
     }
 
-    // Filter by price range
     if (minPrice || maxPrice) {
       whereClause.price = {};
       if (minPrice) whereClause.price[db.Sequelize.Op.gte] = parseFloat(minPrice);
       if (maxPrice) whereClause.price[db.Sequelize.Op.lte] = parseFloat(maxPrice);
     }
 
-    // Search by title or description
     if (search) {
       whereClause[db.Sequelize.Op.or] = [
         { title: { [db.Sequelize.Op.iLike]: `%${search}%` } },
@@ -66,22 +73,21 @@ exports.findAll = async (req, res) => {
       ];
     }
 
-    const includeOptions = {
+    const categoryInclude = {
       model: Category,
       as: 'categories',
       attributes: ['id', 'name', 'slug', 'label'],
       through: { attributes: [] }
     };
 
-    // Filter by category if provided
     if (category) {
-      includeOptions.where = { slug: category };
-      includeOptions.required = true;
+      categoryInclude.where = { slug: category };
+      categoryInclude.required = true;
     }
 
     const data = await Product.findAll({
       where: whereClause,
-      include: [includeOptions],
+      include: [categoryInclude, brandInclude],
       order: [['createdAt', 'DESC']]
     });
 
@@ -91,16 +97,22 @@ exports.findAll = async (req, res) => {
   }
 };
 
-// Get a single product by id
 exports.findOne = async (req, res) => {
   try {
     const data = await Product.findByPk(req.params.id, {
-      include: [{
-        model: Category,
-        as: 'categories',
-        attributes: ['id', 'name', 'slug', 'label'],
-        through: { attributes: [] }
-      }]
+      include: [
+        {
+          model: Category,
+          as: 'categories',
+          attributes: ['id', 'name', 'slug', 'label'],
+          through: { attributes: [] }
+        },
+        {
+          model: Brand,
+          as: 'brand',
+          attributes: ['id', 'name', 'slug']
+        }
+      ]
     });
 
     if (!data) {
@@ -113,7 +125,6 @@ exports.findOne = async (req, res) => {
   }
 };
 
-// Update a product
 exports.update = async (req, res) => {
   try {
     const { categoryIds, ...productData } = req.body;
@@ -128,7 +139,6 @@ exports.update = async (req, res) => {
 
     const product = await Product.findByPk(req.params.id);
 
-    // Update categories if provided
     if (categoryIds && Array.isArray(categoryIds)) {
       const categories = await Category.findAll({
         where: { id: categoryIds }
@@ -136,14 +146,20 @@ exports.update = async (req, res) => {
       await product.setCategories(categories);
     }
 
-    // Fetch updated product with categories
     const updatedProduct = await Product.findByPk(req.params.id, {
-      include: [{
-        model: Category,
-        as: 'categories',
-        attributes: ['id', 'name', 'slug', 'label'],
-        through: { attributes: [] }
-      }]
+      include: [
+        {
+          model: Category,
+          as: 'categories',
+          attributes: ['id', 'name', 'slug', 'label'],
+          through: { attributes: [] }
+        },
+        {
+          model: Brand,
+          as: 'brand',
+          attributes: ['id', 'name', 'slug']
+        }
+      ]
     });
 
     res.json(updatedProduct);
@@ -152,7 +168,6 @@ exports.update = async (req, res) => {
   }
 };
 
-// Delete a product
 exports.delete = async (req, res) => {
   try {
     const num = await Product.destroy({

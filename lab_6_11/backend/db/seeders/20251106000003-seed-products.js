@@ -10,7 +10,7 @@ module.exports = {
         description: 'Пуровер ручної роботи з харчової нержавіючої сталі AISI 304 для заварювання кави методом V60. Українське виробництво',
         price: 2415.00,
         image: '/images/products/raydrop.jpg',
-        brand: 'vasyl-co',
+        brandId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -20,7 +20,7 @@ module.exports = {
         description: 'Легендарний AeroPress з прозорого пластику. Комплект з 350 фільтрами. Швидке приготування, легке очищення',
         price: 1879.00,
         image: '/images/products/aeropress-clear.jpg',
-        brand: 'aeropress',
+        brandId: 2,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -30,7 +30,7 @@ module.exports = {
         description: 'Оригінальний кемекс Chemex на 6 чашок. Класичний дизайн з дерев\'яною манжетою та шкіряним шнурком',
         price: 2399.00,
         image: '/images/products/chemex-6cup.jpg',
-        brand: 'chemex',
+        brandId: 3,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -40,7 +40,7 @@ module.exports = {
         description: 'Компактний аеропрес для подорожей. Легкий і зручний, ідеально підходить для використання поза домом',
         price: 1845.00,
         image: '/images/products/aeropress-go.jpg',
-        brand: 'aeropress',
+        brandId: 2,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -50,7 +50,7 @@ module.exports = {
         description: 'Український дриппер Dotyk Next Generation з унікальним дизайном для рівномірної екстракції кави',
         price: 1669.00,
         image: '/images/products/dotyk-dripper.jpg',
-        brand: 'dotyk',
+        brandId: 4,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -60,7 +60,7 @@ module.exports = {
         description: 'Збільшена версія класичного AeroPress. Дозволяє приготувати більше кави за один раз',
         price: 2549.00,
         image: '/images/products/aeropress-xl.jpg',
-        brand: 'aeropress',
+        brandId: 2,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -70,7 +70,7 @@ module.exports = {
         description: 'Компактний кемекс Chemex на 3 чашки. Ідеально для індивідуального використання',
         price: 2399.00,
         image: '/images/products/chemex-3cup.jpg',
-        brand: 'chemex',
+        brandId: 3,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -80,7 +80,7 @@ module.exports = {
         description: 'Преміум фільтри SIBARIST з подвійною камерою. 30 шт. Для найчистішого смаку кави',
         price: 1329.00,
         image: '/images/products/sibarist-filters.jpg',
-        brand: 'sibarist',
+        brandId: 5,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -90,7 +90,7 @@ module.exports = {
         description: 'Компактний конічний пуровер для приготування однієї порції кави. Простий у використанні',
         price: 289.00,
         image: '/images/products/conical-dripper.jpg',
-        brand: 'generic',
+        brandId: 6,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -100,7 +100,7 @@ module.exports = {
         description: 'Термостійкий скляний сервер з мірною шкалою. Універсальний для кави та чаю',
         price: 548.00,
         image: '/images/products/samadoyo-server.jpg',
-        brand: 'samadoyo',
+        brandId: 7,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -110,7 +110,7 @@ module.exports = {
         description: 'Великий кемекс Chemex на 8 чашок. Ідеально для сім\'ї або компанії друзів',
         price: 2499.00,
         image: '/images/products/chemex-8cup.jpg',
-        brand: 'chemex',
+        brandId: 3,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -120,7 +120,7 @@ module.exports = {
         description: 'Комплект: кемекс на 3 чашки + паперові фільтри FP-2. Все необхідне для початку',
         price: 2785.00,
         image: '/images/products/chemex-3cup-bundle.jpg',
-        brand: 'chemex',
+        brandId: 3,
         createdAt: new Date(),
         updatedAt: new Date()
       }

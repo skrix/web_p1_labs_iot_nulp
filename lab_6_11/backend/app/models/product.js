@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'categoryId',
         as: 'categories'
       });
+
+      Product.belongsTo(models.Brand, {
+        foreignKey: 'brandId',
+        as: 'brand'
+      });
     }
   }
   Product.init({
@@ -30,9 +35,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    brand: {
-      type: DataTypes.STRING,
-      allowNull: false
+    brandId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'brands',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
