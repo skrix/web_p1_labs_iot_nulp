@@ -8,9 +8,10 @@ interface FilterBarProps {
   onSearchChange: (search: string) => void;
   onCategoryChange: (category: string) => void;
   onBrandChange: (brand: string) => void;
+  onPriceChange: (price: string) => void;
 }
 
-export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange }: FilterBarProps) {
+export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onPriceChange }: FilterBarProps) {
   const [filterCategory, setFilterCategory] = useState("");
   const [filterBrand, setFilterBrand] = useState("");
   const [filterPrice, setFilterPrice] = useState("");
@@ -29,6 +30,11 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange }: F
   const handleBrandChange = (value: string) => {
     setFilterBrand(value);
     onBrandChange(value);
+  };
+
+  const handlePriceChange = (value: string) => {
+    setFilterPrice(value);
+    onPriceChange(value);
   };
 
   const categoryOptions = [
@@ -86,7 +92,7 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange }: F
 
             <FilterDropdown
               value={filterPrice}
-              onChange={setFilterPrice}
+              onChange={handlePriceChange}
               label="Ціна"
               options={priceOptions}
             />
@@ -99,7 +105,7 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange }: F
 
           {/* Apply Button */}
           <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer">
-            Застосувати
+            Пошук
           </button>
         </div>
       </div>

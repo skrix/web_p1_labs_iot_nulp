@@ -15,6 +15,7 @@ export default function Catalog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
+  const [priceRange, setPriceRange] = useState("");
 
   return (
     <Layout>
@@ -23,11 +24,13 @@ export default function Catalog() {
           onSearchChange={setSearchQuery}
           onCategoryChange={setCategory}
           onBrandChange={setBrand}
+          onPriceChange={setPriceRange}
         />
         <CatalogGrid
           searchQuery={searchQuery}
           category={category}
           brand={brand}
+          priceRange={priceRange}
         />
       </div>
     </Layout>
