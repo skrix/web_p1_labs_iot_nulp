@@ -9,6 +9,7 @@ export interface Product {
   price: number;
   image: string;
   category: string;
+  brand: string;
 }
 
 const PRODUCTS_DATA: Product[] = [
@@ -19,6 +20,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 2415,
     image: productImage,
     category: "pourover",
+    brand: "vasyl-co",
   },
   {
     id: 1,
@@ -27,6 +29,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 1879,
     image: productImage,
     category: "aeropress",
+    brand: "aeropress",
   },
   {
     id: 2,
@@ -35,6 +38,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 2399,
     image: productImage,
     category: "chemex",
+    brand: "chemex",
   },
   {
     id: 3,
@@ -43,6 +47,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 1845,
     image: productImage,
     category: "aeropress",
+    brand: "aeropress",
   },
   {
     id: 4,
@@ -51,6 +56,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 1669,
     image: productImage,
     category: "pourover",
+    brand: "dotyk",
   },
   {
     id: 5,
@@ -59,6 +65,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 2549,
     image: productImage,
     category: "aeropress",
+    brand: "aeropress",
   },
   {
     id: 6,
@@ -67,6 +74,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 2399,
     image: productImage,
     category: "chemex",
+    brand: "chemex",
   },
   {
     id: 7,
@@ -75,6 +83,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 1329,
     image: productImage,
     category: "filters",
+    brand: "sibarist",
   },
   {
     id: 8,
@@ -83,6 +92,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 289,
     image: productImage,
     category: "pourover",
+    brand: "hario",
   },
   {
     id: 9,
@@ -91,6 +101,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 548,
     image: productImage,
     category: "servers",
+    brand: "samadoyo",
   },
   {
     id: 10,
@@ -99,6 +110,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 2499,
     image: productImage,
     category: "chemex",
+    brand: "chemex",
   },
   {
     id: 11,
@@ -107,6 +119,7 @@ const PRODUCTS_DATA: Product[] = [
     price: 2785,
     image: productImage,
     category: "chemex",
+    brand: "hario",
   },
 ];
 

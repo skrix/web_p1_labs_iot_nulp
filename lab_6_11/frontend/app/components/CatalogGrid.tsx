@@ -5,9 +5,10 @@ import { useProducts } from "../context/ProductsContext";
 interface CatalogGridProps {
   searchQuery?: string;
   category?: string;
+  brand?: string;
 }
 
-export function CatalogGrid({ searchQuery = "", category = "" }: CatalogGridProps) {
+export function CatalogGrid({ searchQuery = "", category = "", brand = "" }: CatalogGridProps) {
   const { products } = useProducts();
 
   const filteredProducts = useMemo(() => {
@@ -16,6 +17,11 @@ export function CatalogGrid({ searchQuery = "", category = "" }: CatalogGridProp
     // Filter by category
     if (category) {
       filtered = filtered.filter((product) => product.category === category);
+    }
+
+    // Filter by brand
+    if (brand) {
+      filtered = filtered.filter((product) => product.brand === brand);
     }
 
     // Filter by search query
@@ -30,7 +36,7 @@ export function CatalogGrid({ searchQuery = "", category = "" }: CatalogGridProp
     }
 
     return filtered;
-  }, [products, searchQuery, category]);
+  }, [products, searchQuery, category, brand]);
 
   const productCards = useMemo(
     () =>
@@ -56,7 +62,7 @@ export function CatalogGrid({ searchQuery = "", category = "" }: CatalogGridProp
       ) : (
         <div className="text-center py-16">
           <p className="text-gray-500 dark:text-gray-400 text-lg">
-            Нічого не знайдено за запитом "{searchQuery}"
+            Нічого не знайдено за запитом "{searchQuery || category || brand}"
           </p>
         </div>
       )}
