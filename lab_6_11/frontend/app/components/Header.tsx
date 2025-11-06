@@ -1,38 +1,33 @@
 "use client";
 
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import { Logo } from "./Logo";
 import { useState } from "react";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const getLinkClasses = ({ isActive }: { isActive: boolean }) => {
+    return `px-6 py-2 text-gray-900 dark:text-white text-center ${isActive ? "border border-gray-900 dark:border-white" : "hover:bg-white/10 dark:hover:bg-white/10"}`;
+  };
+
   return (
-    <header className="bg-white dark:bg-black/30 text-gray-950 dark:text-white backdrop-blur-sm py-4 absolute top-0 left-0 right-0 z-50">
+    <header className="bg-white/80 dark:bg-black/30 text-gray-900 dark:text-white backdrop-blur-sm py-4 fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <Logo />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6">
-            <Link
-              to="/"
-              className="px-6 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition-colors backdrop-blur-sm"
-            >
+          <nav className="hidden md:flex gap-6 items-center">
+            <NavLink to="/" className={getLinkClasses}>
               Головна
-            </Link>
-            <Link
-              to="/catalog"
-              className="px-6 py-2 hover:text-gray-300 transition-colors"
-            >
+            </NavLink>
+            <NavLink to="/catalog" className={getLinkClasses}>
               Магазин
-            </Link>
-            <Link
-              to="/cart"
-              className="px-6 py-2 hover:text-gray-300 transition-colors"
-            >
+            </NavLink>
+            <NavLink to="/cart" className={getLinkClasses}>
               Кошик
-            </Link>
+            </NavLink>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -41,36 +36,36 @@ export function Header() {
             className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
             aria-label="Toggle menu"
           >
-            <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-            <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''}`} />
-            <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            <span className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <nav className="md:hidden flex flex-col gap-4 mt-4 pb-4">
-            <Link
+            <NavLink
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="px-6 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition-colors backdrop-blur-sm text-center"
+              className={getLinkClasses}
             >
               Головна
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/catalog"
               onClick={() => setIsMenuOpen(false)}
-              className="px-6 py-2 hover:text-gray-300 transition-colors text-center"
+              className={getLinkClasses}
             >
               Магазин
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/cart"
               onClick={() => setIsMenuOpen(false)}
-              className="px-6 py-2 hover:text-gray-300 transition-colors text-center"
+              className={getLinkClasses}
             >
               Кошик
-            </Link>
+            </NavLink>
           </nav>
         )}
       </div>
