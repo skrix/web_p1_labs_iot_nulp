@@ -6,3 +6,8 @@ export { Tile } from "./Tile";
 export { TilesSection } from "./TilesSection";
 export { Logo } from "./Logo";
 export { TypingText } from "./TypingText";
+export { FilterDropdown } from "./FilterDropdown";
+export { FilterBar } from "./FilterBar";
+export { SearchBar } from "./SearchBar";
+export { CatalogGrid } from "./CatalogGrid";
+export { ProductCard } from "./ProductCard";

@@ -47,7 +47,7 @@ export function CatalogGrid() {
 
   return (
     <div className="pb-16">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {products}
       </div>
     </div>
