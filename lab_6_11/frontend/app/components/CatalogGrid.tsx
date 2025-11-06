@@ -6,9 +6,15 @@ interface CatalogGridProps {
   searchQuery?: string;
   category?: string;
   brand?: string;
+  priceRange?: string;
 }
 
-export function CatalogGrid({ searchQuery = "", category = "", brand = "" }: CatalogGridProps) {
+export function CatalogGrid({
+  searchQuery = "",
+  category = "",
+  brand = "",
+  priceRange = ""
+}: CatalogGridProps) {
   const { products } = useProducts();
 
   const filteredProducts = useMemo(() => {
@@ -24,6 +30,31 @@ export function CatalogGrid({ searchQuery = "", category = "", brand = "" }: Cat
       filtered = filtered.filter((product) => product.brand === brand);
     }
 
+    // Filter by price range
+    if (priceRange) {
+      filtered = filtered.filter((product) => {
+        const price = product.price;
+
+        if (priceRange === "0-300") {
+          return price <= 300;
+        } else if (priceRange === "300-600") {
+          return price > 300 && price <= 600;
+        } else if (priceRange === "600-1000") {
+          return price > 600 && price <= 1000;
+        } else if (priceRange === "1000-1500") {
+          return price > 1000 && price <= 1500;
+        } else if (priceRange === "1500-2000") {
+          return price > 1500 && price <= 2000;
+        } else if (priceRange === "2000-3000") {
+          return price > 2000 && price <= 3000;
+        } else if (priceRange === "3000+") {
+          return price > 3000;
+        }
+
+        return true;
+      });
+    }
+
     // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -36,7 +67,7 @@ export function CatalogGrid({ searchQuery = "", category = "", brand = "" }: Cat
     }
 
     return filtered;
-  }, [products, searchQuery, category, brand]);
+  }, [products, searchQuery, category, brand, priceRange]);
 
   const productCards = useMemo(
     () =>
