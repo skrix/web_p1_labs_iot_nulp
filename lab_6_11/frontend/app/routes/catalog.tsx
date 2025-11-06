@@ -13,12 +13,19 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Catalog() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState("");
 
   return (
     <Layout>
       <div className="container mx-auto px-4 pt-24 bg-white dark:bg-gray-950 min-h-screen">
-        <FilterBar onSearchChange={setSearchQuery} />
-        <CatalogGrid searchQuery={searchQuery} />
+        <FilterBar
+          onSearchChange={setSearchQuery}
+          onCategoryChange={setCategory}
+        />
+        <CatalogGrid
+          searchQuery={searchQuery}
+          category={category}
+        />
       </div>
     </Layout>
   );

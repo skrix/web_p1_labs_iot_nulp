@@ -8,6 +8,7 @@ export interface Product {
   description: string;
   price: number;
   image: string;
+  category: string;
 }
 
 const PRODUCTS_DATA: Product[] = [
@@ -17,6 +18,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Пуровер ручної роботи з харчової нержавіючої сталі AISI 304 для заварювання кави методом V60. Українське виробництво",
     price: 2415,
     image: productImage,
+    category: "pourover",
   },
   {
     id: 1,
@@ -24,6 +26,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Легендарний AeroPress з прозорого пластику. Комплект з 350 фільтрами. Швидке приготування, легке очищення",
     price: 1879,
     image: productImage,
+    category: "aeropress",
   },
   {
     id: 2,
@@ -31,6 +34,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Оригінальний кемекс Chemex на 6 чашок. Класичний дизайн з дерев'яною манжетою та шкіряним шнурком",
     price: 2399,
     image: productImage,
+    category: "chemex",
   },
   {
     id: 3,
@@ -38,6 +42,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Компактний аеропрес для подорожей. Легкий і зручний, ідеально підходить для використання поза домом",
     price: 1845,
     image: productImage,
+    category: "aeropress",
   },
   {
     id: 4,
@@ -45,6 +50,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Український дриппер Dotyk Next Generation з унікальним дизайном для рівномірної екстракції кави",
     price: 1669,
     image: productImage,
+    category: "pourover",
   },
   {
     id: 5,
@@ -52,6 +58,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Збільшена версія класичного AeroPress. Дозволяє приготувати більше кави за один раз",
     price: 2549,
     image: productImage,
+    category: "aeropress",
   },
   {
     id: 6,
@@ -59,6 +66,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Компактний кемекс Chemex на 3 чашки. Ідеально для індивідуального використання",
     price: 2399,
     image: productImage,
+    category: "chemex",
   },
   {
     id: 7,
@@ -66,6 +74,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Преміум фільтри SIBARIST з подвійною камерою. 30 шт. Для найчистішого смаку кави",
     price: 1329,
     image: productImage,
+    category: "filters",
   },
   {
     id: 8,
@@ -73,6 +82,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Компактний конічний пуровер для приготування однієї порції кави. Простий у використанні",
     price: 289,
     image: productImage,
+    category: "pourover",
   },
   {
     id: 9,
@@ -80,6 +90,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Термостійкий скляний сервер з мірною шкалою. Універсальний для кави та чаю",
     price: 548,
     image: productImage,
+    category: "servers",
   },
   {
     id: 10,
@@ -87,6 +98,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Великий кемекс Chemex на 8 чашок. Ідеально для сім'ї або компанії друзів",
     price: 2499,
     image: productImage,
+    category: "chemex",
   },
   {
     id: 11,
@@ -94,6 +106,7 @@ const PRODUCTS_DATA: Product[] = [
     description: "Комплект: кемекс на 3 чашки + паперові фільтри FP-2. Все необхідне для початку",
     price: 2785,
     image: productImage,
+    category: "chemex",
   },
 ];
 
