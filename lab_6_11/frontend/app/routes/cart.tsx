@@ -94,9 +94,12 @@ export default function Cart() {
                 >
                   ← Продовжити покупки
                 </Link>
-                <button className="w-full sm:w-auto px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors font-bold text-lg">
+                <Link
+                  to="/checkout"
+                  className="w-full sm:w-auto px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors font-bold text-lg"
+                >
                   Оформити замовлення →
-                </button>
+                </Link>
               </div>
             </div>
           </>
