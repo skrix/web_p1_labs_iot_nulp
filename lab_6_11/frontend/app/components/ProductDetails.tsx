@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useProducts } from "../context/ProductsContext";
 import { Spinner } from "./Spinner";
 import type { Product } from "../services/products.api";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addToCart } from "../store/cartSlice";
+import { fetchProductById, selectProductsLoading } from "../store/productsSlice";
 
 interface ProductDetailsProps {
   productId: string;
@@ -16,21 +16,20 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState("1");
   const [selectedOption, setSelectedOption] = useState("");
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
+  const loading = useAppSelector(selectProductsLoading);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      setLoading(true);
-      const data = await getProductById(parseInt(productId));
-      setProduct(data);
-      setLoading(false);
+      const result = await dispatch(fetchProductById(parseInt(productId)));
+      if (result.meta.requestStatus === 'fulfilled') {
+        setProduct(result.payload as Product);
+      }
     };
 
     fetchProduct();
-  }, [productId, getProductById]);
+  }, [productId, dispatch]);
 
   return (
     <>
