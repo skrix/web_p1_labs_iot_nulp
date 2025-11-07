@@ -6,6 +6,7 @@ import type { Product } from "../services/products.api";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addToCart } from "../store/cartSlice";
 import { fetchProductById, selectProductsLoading } from "../store/productsSlice";
+import { formatPrice } from "../utils/currency";
 
 interface ProductDetailsProps {
   productId: string;
@@ -112,7 +113,7 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
 
           <div className="flex items-center justify-between py-6 border-t border-gray-300 dark:border-gray-700">
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
-              Ціна: {product.price} ₴
+              Ціна: {formatPrice(product.price, product.currency)}
             </div>
 
             <div className="flex gap-4">

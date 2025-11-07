@@ -41,6 +41,7 @@ export function ProductsSection() {
               title={product.title}
               description={product.description}
               price={product.price}
+              currency={product.currency}
               image={product.image}
             />
           ))}
