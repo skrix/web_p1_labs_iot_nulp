@@ -1,12 +1,18 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
-import { useProducts } from "./index";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchProducts, selectProducts } from "../store/productsSlice";
 
 const PER_PAGE = 3;
 
 export function ProductsSection() {
-  const { products } = useProducts();
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(selectProducts);
   const [visibleProductsCount, setVisibleProductsCount] = useState(PER_PAGE);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const visibleProducts = useMemo(
     () => products.slice(0, visibleProductsCount),
