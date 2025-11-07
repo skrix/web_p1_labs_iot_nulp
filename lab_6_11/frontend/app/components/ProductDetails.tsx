@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useProducts } from "../context/ProductsContext";
 import { Spinner } from "./Spinner";
 import type { Product } from "../services/products.api";
+import { useAppDispatch } from "../store/hooks";
+import { addToCart } from "../store/cartSlice";
 
 interface ProductDetailsProps {
   productId: string;
@@ -17,6 +19,7 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
   const [loading, setLoading] = useState(true);
 
   const { getProductById } = useProducts();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -120,7 +123,14 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
               >
                 Повернутися
               </button>
-              <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium transition-colors">
+              <button
+                onClick={() => {
+                  if (product) {
+                    dispatch(addToCart({ product, quantity: parseInt(quantity) || 1 }));
+                  }
+                }}
+                className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium transition-colors"
+              >
                 Додати в кошик
               </button>
             </div>
