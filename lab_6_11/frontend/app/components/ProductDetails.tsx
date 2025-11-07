@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Spinner } from "./Spinner";
 import type { Product } from "../services/products.api";
