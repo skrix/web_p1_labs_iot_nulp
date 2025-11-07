@@ -3,6 +3,7 @@ import { Layout } from "../components/Layout";
 import { CartItem } from "../components/CartItem";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectCartItems, selectCartTotalAmount, clearCart } from "../store/cartSlice";
+import { formatPrice } from "../utils/currency";
 import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
@@ -16,6 +17,8 @@ export default function Cart() {
   const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
   const totalAmount = useAppSelector(selectCartTotalAmount);
+
+  const currency = 'UAH';
 
   const handleClearCart = () => {
     if (confirm("Ви впевнені, що хочете очистити кошик?")) {
@@ -77,11 +80,11 @@ export default function Cart() {
             <div className="max-w-4xl mx-auto border-t-2 border-gray-300 dark:border-gray-700 pt-6">
               <div className="flex justify-between items-center mb-2 text-gray-600 dark:text-gray-400">
                 <span className="text-lg">Проміжна сума ({items.reduce((sum, item) => sum + item.quantity, 0)} товарів):</span>
-                <span className="text-lg font-medium">{totalAmount.toFixed(2)} ₴</span>
+                  <span className="text-lg font-medium">{formatPrice(totalAmount, currency)}</span>
               </div>
               <div className="flex justify-between items-center mb-8 text-gray-900 dark:text-white border-t border-gray-200 dark:border-gray-800 pt-4">
                 <span className="text-2xl font-bold">Всього:</span>
-                <span className="text-3xl font-bold">{totalAmount.toFixed(2)} ₴</span>
+                  <span className="text-3xl font-bold">{formatPrice(totalAmount, currency)}</span>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">

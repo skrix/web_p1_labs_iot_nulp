@@ -2,6 +2,7 @@ import { memo } from "react";
 import type { CartItem as CartItemType } from "../store/cartSlice";
 import { useAppDispatch } from "../store/hooks";
 import { updateQuantity, removeFromCart } from "../store/cartSlice";
+import { formatPrice } from "../utils/currency";
 
 interface CartItemProps {
   item: CartItemType;
@@ -10,7 +11,6 @@ interface CartItemProps {
 export const CartItem = memo(function CartItem({ item }: CartItemProps) {
   const dispatch = useAppDispatch();
   const { product, quantity } = item;
-  const totalPrice = (product.price * quantity).toFixed(2);
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -43,7 +43,7 @@ export const CartItem = memo(function CartItem({ item }: CartItemProps) {
           {product.title}
         </h3>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          {product.price} ₴ за шт.
+          {formatPrice(product.price, product.currency)} за шт.
         </p>
       </div>
 
@@ -70,7 +70,7 @@ export const CartItem = memo(function CartItem({ item }: CartItemProps) {
 
         <div className="flex items-center gap-4">
           <div className="text-gray-900 dark:text-white font-bold text-xl min-w-24 text-center md:text-right">
-            {totalPrice} ₴
+            {formatPrice(product.price * quantity, product.currency)}
           </div>
 
           <button
