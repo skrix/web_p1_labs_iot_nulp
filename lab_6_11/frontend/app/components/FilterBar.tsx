@@ -41,7 +41,10 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    onSearchChange(value);
+  };
+
+  const handleApplySearch = () => {
+    onSearchChange(search);
   };
 
   const handleCategoryChange = (value: string) => {
@@ -107,10 +110,13 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
           </div>
 
           <div className="w-full md:w-80">
-            <SearchBar value={search} onChange={handleSearchChange} />
+            <SearchBar value={search} onChange={handleSearchChange} onSearch={handleApplySearch} />
           </div>
 
-          <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer">
+          <button
+            onClick={handleApplySearch}
+            className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer"
+          >
             Пошук
           </button>
         </div>
