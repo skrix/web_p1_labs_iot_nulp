@@ -19,7 +19,10 @@ interface FormValues {
   lastName: string;
   email: string;
   phone: string;
-  address: string;
+  city: string;
+  deliveryMethod: string;
+  pickupLocation: string;
+  paymentMethod: string;
 }
 
 export default function Checkout() {
@@ -33,17 +36,24 @@ export default function Checkout() {
       lastName: '',
       email: '',
       phone: '',
-      address: '',
+      city: '',
+      deliveryMethod: '',
+      pickupLocation: '',
+      paymentMethod: '',
     },
     validate: (values) => {
       const errors: Partial<Record<keyof FormValues, string>> = {};
 
       if (!values.firstName.trim()) {
         errors.firstName = "Введіть ім'я";
+      } else if (values.firstName.length > 30) {
+        errors.firstName = "Ім'я не повинно перевищувати 30 символів";
       }
 
       if (!values.lastName.trim()) {
         errors.lastName = "Введіть прізвище";
+      } else if (values.lastName.length > 30) {
+        errors.lastName = "Прізвище не повинно перевищувати 30 символів";
       }
 
       if (!values.email.trim()) {
@@ -58,8 +68,20 @@ export default function Checkout() {
         errors.phone = "Невірний формат телефону. Очікується: +380XXXXXXXXX або 0XXXXXXXXX";
       }
 
-      if (!values.address.trim()) {
-        errors.address = "Введіть адресу";
+      if (!values.city.trim()) {
+        errors.city = "Введіть місто";
+      }
+
+      if (!values.deliveryMethod) {
+        errors.deliveryMethod = "Оберіть спосіб доставки";
+      }
+
+      if (!values.pickupLocation) {
+        errors.pickupLocation = "Оберіть місце видачі";
+      }
+
+      if (!values.paymentMethod) {
+        errors.paymentMethod = "Оберіть спосіб оплати";
       }
 
       return errors;
@@ -222,30 +244,173 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Address Field */}
+            {/* City Field */}
             <div>
               <label
-                htmlFor="address"
+                htmlFor="city"
                 className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
               >
-                Адреса доставки
+                Місто
               </label>
               <input
                 type="text"
-                id="address"
-                name="address"
-                value={formik.values.address}
+                id="city"
+                name="city"
+                value={formik.values.city}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className={`w-full px-4 py-3 border ${
-                  formik.touched.address && formik.errors.address
+                  formik.touched.city && formik.errors.city
                     ? 'border-red-500 focus:ring-red-500'
                     : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
                 } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-                placeholder="Введіть повну адресу доставки"
+                placeholder="Введіть місто"
               />
-              {formik.touched.address && formik.errors.address && (
-                <p className="mt-1 text-sm text-red-500">{formik.errors.address}</p>
+              {formik.touched.city && formik.errors.city && (
+                <p className="mt-1 text-sm text-red-500">{formik.errors.city}</p>
+              )}
+            </div>
+
+            {/* Delivery Method */}
+            <div>
+              <label
+                htmlFor="deliveryMethod"
+                className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
+              >
+                Спосіб доставки
+              </label>
+              <select
+                id="deliveryMethod"
+                name="deliveryMethod"
+                value={formik.values.deliveryMethod}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={`w-full px-4 py-3 border ${
+                  formik.touched.deliveryMethod && formik.errors.deliveryMethod
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
+                } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+                  backgroundPosition: 'right 0.5rem center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem',
+                }}
+              >
+                <option value="">Оберіть спосіб доставки</option>
+                <option value="nova-poshta">Нова Пошта</option>
+                <option value="ukrposhta">Укрпошта</option>
+                <option value="meest">Meest Express</option>
+                <option value="self-pickup">Самовивіз</option>
+              </select>
+              {formik.touched.deliveryMethod && formik.errors.deliveryMethod && (
+                <p className="mt-1 text-sm text-red-500">{formik.errors.deliveryMethod}</p>
+              )}
+            </div>
+
+            {/* Pickup Location */}
+            {formik.values.deliveryMethod && (
+              <div>
+                <label
+                  htmlFor="pickupLocation"
+                  className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
+                >
+                  {formik.values.deliveryMethod === 'self-pickup'
+                    ? 'Локація магазину'
+                    : 'Відділення перевізника'}
+                </label>
+                <select
+                  id="pickupLocation"
+                  name="pickupLocation"
+                  value={formik.values.pickupLocation}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full px-4 py-3 border ${
+                    formik.touched.pickupLocation && formik.errors.pickupLocation
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
+                  } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+                    backgroundPosition: 'right 0.5rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '2.5rem',
+                  }}
+                >
+                  <option value="">Оберіть локацію</option>
+                  {formik.values.deliveryMethod === 'nova-poshta' ? (
+                    <>
+                      <option value="np-1">Відділення №1 - вул. Хрещатик, 1</option>
+                      <option value="np-2">Відділення №5 - вул. Шевченка, 15</option>
+                      <option value="np-3">Відділення №12 - просп. Перемоги, 42</option>
+                      <option value="np-4">Відділення №20 - вул. Лесі Українки, 8</option>
+                      <option value="np-5">Відділення №33 - вул. Бандери, 25</option>
+                    </>
+                  ) : formik.values.deliveryMethod === 'ukrposhta' ? (
+                    <>
+                      <option value="up-1">Відділення №1 - вул. Центральна, 5</option>
+                      <option value="up-2">Відділення №3 - вул. Грушевського, 12</option>
+                      <option value="up-3">Відділення №7 - просп. Незалежності, 30</option>
+                      <option value="up-4">Відділення №10 - вул. Франка, 18</option>
+                    </>
+                  ) : formik.values.deliveryMethod === 'meest' ? (
+                    <>
+                      <option value="meest-1">Відділення №1 - вул. Городоцька, 25</option>
+                      <option value="meest-2">Відділення №2 - вул. Наукова, 7</option>
+                      <option value="meest-3">Відділення №5 - просп. В. Чорновола, 53</option>
+                      <option value="meest-4">Відділення №8 - вул. Стрийська, 120</option>
+                    </>
+                  ) : formik.values.deliveryMethod === 'self-pickup' ? (
+                    <>
+                      <option value="shop-center">Магазин - вул. Театральна, 10 (Центр)</option>
+                      <option value="shop-mall">Магазин - ТРЦ King Cross Leopolis</option>
+                      <option value="shop-victoria">Магазин - ТРЦ Victoria Gardens</option>
+                    </>
+                  ) : null}
+                </select>
+                {formik.touched.pickupLocation && formik.errors.pickupLocation && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.pickupLocation}</p>
+                )}
+              </div>
+            )}
+
+            {/* Payment Method */}
+            <div>
+              <label
+                htmlFor="paymentMethod"
+                className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
+              >
+                Спосіб оплати
+              </label>
+              <select
+                id="paymentMethod"
+                name="paymentMethod"
+                value={formik.values.paymentMethod}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={`w-full px-4 py-3 border ${
+                  formik.touched.paymentMethod && formik.errors.paymentMethod
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
+                } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+                  backgroundPosition: 'right 0.5rem center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem',
+                }}
+              >
+                <option value="">Оберіть спосіб оплати</option>
+                <option value="cash">Готівка при отриманні</option>
+                <option value="card">Банківська карта (Visa/Mastercard)</option>
+                <option value="online">Онлайн оплата (Apple Pay/Google Pay)</option>
+                <option value="bank-transfer">Банківський переказ</option>
+              </select>
+              {formik.touched.paymentMethod && formik.errors.paymentMethod && (
+                <p className="mt-1 text-sm text-red-500">{formik.errors.paymentMethod}</p>
               )}
             </div>
           </div>
