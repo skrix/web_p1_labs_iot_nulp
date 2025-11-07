@@ -14,8 +14,6 @@ interface CartState {
 const CART_STORAGE_KEY = 'cart';
 
 const loadCartFromStorage = (): CartItem[] => {
-  if (typeof window === 'undefined') return [];
-
   try {
     const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     return savedCart ? JSON.parse(savedCart) : [];
@@ -26,12 +24,10 @@ const loadCartFromStorage = (): CartItem[] => {
 };
 
 const saveCartToStorage = (items: CartItem[]) => {
-  if (typeof window !== 'undefined') {
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-    } catch (error) {
-      console.error('Failed to save cart to localStorage:', error);
-    }
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  } catch (error) {
+    console.error('Failed to save cart to localStorage:', error);
   }
 };
 

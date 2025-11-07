@@ -1,5 +1,3 @@
-"use client";
-
 import { NavLink } from "react-router";
 import { Logo } from "./Logo";
 import { useState } from "react";
