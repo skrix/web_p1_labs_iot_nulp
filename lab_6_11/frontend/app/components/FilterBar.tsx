@@ -62,6 +62,19 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     onPriceChange(value);
   };
 
+  const handleClearAllFilters = () => {
+    setSearch("");
+    setFilterCategory("");
+    setFilterBrand("");
+    setFilterPrice("");
+    onSearchChange("");
+    onCategoryChange("");
+    onBrandChange("");
+    onPriceChange("");
+  };
+
+  const hasActiveFilters = search || filterCategory || filterBrand || filterPrice;
+
   const categoryOptions = categories.map(category => ({
     value: category.slug,
     label: category.label
@@ -119,6 +132,15 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
           >
             Пошук
           </button>
+
+          {hasActiveFilters && (
+            <button
+              onClick={handleClearAllFilters}
+              className="px-8 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white font-medium whitespace-nowrap transition-colors cursor-pointer"
+            >
+              Скинути фільтри
+            </button>
+          )}
         </div>
       </div>
     </div>
