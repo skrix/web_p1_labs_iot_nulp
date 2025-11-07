@@ -3,9 +3,12 @@
 import { NavLink } from "react-router";
 import { Logo } from "./Logo";
 import { useState } from "react";
+import { useAppSelector } from "../store/hooks";
+import { selectCartItemCount } from "../store/cartSlice";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cartItemCount = useAppSelector(selectCartItemCount);
 
   const getLinkClasses = ({ isActive }: { isActive: boolean }) => {
     return `px-6 py-2 text-gray-900 dark:text-white text-center ${isActive ? "border border-gray-900 dark:border-white" : "hover:bg-white/10 dark:hover:bg-white/10"}`;
@@ -25,8 +28,13 @@ export function Header() {
             <NavLink to="/catalog" className={getLinkClasses}>
               Магазин
             </NavLink>
-            <NavLink to="/cart" className={getLinkClasses}>
+            <NavLink to="/cart" className={({ isActive }) => `relative ${getLinkClasses({ isActive })}`}>
               Кошик
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </NavLink>
           </nav>
 
@@ -62,9 +70,14 @@ export function Header() {
             <NavLink
               to="/cart"
               onClick={() => setIsMenuOpen(false)}
-              className={getLinkClasses}
+              className={({ isActive }) => `relative ${getLinkClasses({ isActive })}`}
             >
               Кошик
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </NavLink>
           </nav>
         )}

@@ -39,7 +39,6 @@ module.exports = {
       }
     });
 
-    // Add unique constraint to prevent duplicate associations
     await queryInterface.addIndex('product_categories', ['productId', 'categoryId'], {
       unique: true,
       name: 'product_category_unique'
