@@ -9,6 +9,7 @@ import { SocialLinks } from "../components/SocialLinks";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { carriersApi, type Carrier } from "../services/carriers.api";
+import { carrierLocationsApi, type CarrierLocation } from "../services/carrierLocations.api";
 import { ordersApi } from "../services/orders.api";
 
 export function meta({}: Route.MetaArgs) {
@@ -66,6 +67,7 @@ export default function Checkout() {
   const items = useAppSelector(selectCartItems);
   const [showError, setShowError] = useState(false);
   const [carriers, setCarriers] = useState<Carrier[]>([]);
+  const [carrierLocations, setCarrierLocations] = useState<CarrierLocation[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -141,6 +143,28 @@ export default function Checkout() {
       setTimeout(() => setShowError(false), 5000);
     }
   };
+
+  // Fetch carrier locations when carrier is selected
+  useEffect(() => {
+    const fetchLocations = async () => {
+      if (formik.values.carrierId) {
+        try {
+          const locations = await carrierLocationsApi.getAll({
+            carrierId: parseInt(formik.values.carrierId)
+          });
+          setCarrierLocations(locations);
+          if (formik.values.pickupLocation) {
+            formik.setFieldValue('pickupLocation', '');
+          }
+        } catch (error) {
+          console.error('Failed to fetch carrier locations:', error);
+        }
+      } else {
+        setCarrierLocations([]);
+      }
+    };
+    fetchLocations();
+  }, [formik.values.carrierId]);
 
   if (items.length === 0) {
     return (
@@ -373,35 +397,11 @@ export default function Checkout() {
                   }}
                 >
                   <option value="">Оберіть локацію</option>
-                  {carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'nova-poshta' ? (
-                    <>
-                      <option value="np-1">Відділення №1 - вул. Хрещатик, 1</option>
-                      <option value="np-2">Відділення №5 - вул. Шевченка, 15</option>
-                      <option value="np-3">Відділення №12 - просп. Перемоги, 42</option>
-                      <option value="np-4">Відділення №20 - вул. Лесі Українки, 8</option>
-                      <option value="np-5">Відділення №33 - вул. Бандери, 25</option>
-                    </>
-                  ) : carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'ukrposhta' ? (
-                    <>
-                      <option value="up-1">Відділення №1 - вул. Центральна, 5</option>
-                      <option value="up-2">Відділення №3 - вул. Грушевського, 12</option>
-                      <option value="up-3">Відділення №7 - просп. Незалежності, 30</option>
-                      <option value="up-4">Відділення №10 - вул. Франка, 18</option>
-                    </>
-                  ) : carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'meest' ? (
-                    <>
-                      <option value="meest-1">Відділення №1 - вул. Городоцька, 25</option>
-                      <option value="meest-2">Відділення №2 - вул. Наукова, 7</option>
-                      <option value="meest-3">Відділення №5 - просп. В. Чорновола, 53</option>
-                      <option value="meest-4">Відділення №8 - вул. Стрийська, 120</option>
-                    </>
-                  ) : carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'self-pickup' ? (
-                    <>
-                      <option value="shop-center">Магазин - вул. Театральна, 10 (Центр)</option>
-                      <option value="shop-mall">Магазин - ТРЦ King Cross Leopolis</option>
-                      <option value="shop-victoria">Магазин - ТРЦ Victoria Gardens</option>
-                    </>
-                  ) : null}
+                  {carrierLocations.map((location) => (
+                    <option key={location.id} value={location.id}>
+                      {location.name} - {location.address}
+                    </option>
+                  ))}
                 </select>
                 {formik.touched.pickupLocation && formik.errors.pickupLocation && (
                   <p className="mt-1 text-sm text-red-500">{formik.errors.pickupLocation}</p>

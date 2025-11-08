@@ -2,34 +2,40 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Carrier extends Model {
+  class CarrierLocation extends Model {
     static associate(models) {
-      Carrier.hasMany(models.Order, {
+      CarrierLocation.belongsTo(models.Carrier, {
         foreignKey: 'carrierId',
-        as: 'orders'
-      });
-
-      Carrier.hasMany(models.CarrierLocation, {
-        foreignKey: 'carrierId',
-        as: 'locations'
+        as: 'carrier'
       });
     }
   }
 
-  Carrier.init({
+  CarrierLocation.init({
+    carrierId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'carriers',
+        key: 'id'
+      }
+    },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     code: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
-    logo: {
+    address: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     isActive: {
       type: DataTypes.BOOLEAN,
@@ -38,10 +44,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Carrier',
-    tableName: 'carriers',
+    modelName: 'CarrierLocation',
+    tableName: 'carrier_locations',
     timestamps: true
   });
 
-  return Carrier;
+  return CarrierLocation;
 };
