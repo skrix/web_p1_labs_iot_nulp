@@ -117,10 +117,10 @@ export default function Checkout() {
           items: orderItems,
         };
 
-        await ordersApi.create(orderData);
+        const createdOrder = await ordersApi.create(orderData);
         dispatch(clearCart());
-        navigate('/catalog', {
-          state: { message: 'Замовлення успішно оформлено!' }
+        navigate('/order-success', {
+          state: { order: createdOrder }
         });
       } catch (error: any) {
         console.error('Failed to create order:', error);

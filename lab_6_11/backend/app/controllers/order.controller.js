@@ -15,7 +15,6 @@ exports.create = async (req, res) => {
       phone,
       city,
       carrierId,
-      deliveryMethod,
       pickupLocation,
       paymentMethod,
       items,
@@ -54,10 +53,9 @@ exports.create = async (req, res) => {
       phone,
       city,
       carrierId,
-      deliveryMethod,
       pickupLocation,
       paymentMethod,
-      totalAmount,
+      amount: totalAmount,
       currency: 'UAH',
       status: 'pending',
       notes
@@ -106,12 +104,11 @@ exports.create = async (req, res) => {
 
 exports.findAll = async (req, res) => {
   try {
-    const { status, userId, deliveryMethod, paymentMethod } = req.query;
+    const { status, userId, paymentMethod } = req.query;
 
     let where = {};
     if (status) where.status = status;
     if (userId) where.userId = userId;
-    if (deliveryMethod) where.deliveryMethod = deliveryMethod;
     if (paymentMethod) where.paymentMethod = paymentMethod;
 
     const orders = await Order.findAll({
@@ -197,7 +194,6 @@ exports.update = async (req, res) => {
       phone,
       city,
       carrierId,
-      deliveryMethod,
       pickupLocation,
       paymentMethod,
       notes
@@ -220,7 +216,6 @@ exports.update = async (req, res) => {
       phone,
       city,
       carrierId,
-      deliveryMethod,
       pickupLocation,
       paymentMethod,
       notes
