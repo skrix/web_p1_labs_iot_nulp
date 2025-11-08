@@ -6,12 +6,12 @@ import { addToCart } from "../store/cartSlice";
 import { fetchProductById, selectProductsLoading } from "../store/productsSlice";
 import { formatPrice } from "../utils/currency";
 
-interface ProductDetailsProps {
+interface ProductPageProps {
   productId: string;
   onBack: () => void;
 }
 
-export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
+export function ProductPage({ productId, onBack }: ProductPageProps) {
   const [quantity, setQuantity] = useState("1");
   const [selectedOption, setSelectedOption] = useState("");
   const [product, setProduct] = useState<Product | null>(null);

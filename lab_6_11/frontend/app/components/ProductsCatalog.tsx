@@ -4,54 +4,33 @@ import { Spinner } from "./Spinner";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchProducts, selectProducts, selectProductsLoading, selectProductsError } from "../store/productsSlice";
 import type { ProductFilters } from "../services/products.api";
+import { parsePriceRange } from "../utils/filters";
 
-interface CatalogGridProps {
+interface ProductsCatalogProps {
   searchQuery?: string;
   category?: string;
   brand?: string;
   priceRange?: string;
 }
 
-export function CatalogGrid({
+export function ProductsCatalog({
   searchQuery = "",
   category = "",
   brand = "",
   priceRange = ""
-}: CatalogGridProps) {
+}: ProductsCatalogProps) {
   const dispatch = useAppDispatch();
   const products = useAppSelector(selectProducts);
   const loading = useAppSelector(selectProductsLoading);
   const error = useAppSelector(selectProductsError);
 
   useEffect(() => {
-    const filters: ProductFilters = {};
-
-    if (category) { filters.category = category; }
-    if (brand) { filters.brand = brand; }
-    if (searchQuery.trim()) { filters.search = searchQuery; }
-
-    if (priceRange) {
-      if (priceRange === "0-300") {
-        filters.maxPrice = 300;
-      } else if (priceRange === "300-600") {
-        filters.minPrice = 300;
-        filters.maxPrice = 600;
-      } else if (priceRange === "600-1000") {
-        filters.minPrice = 600;
-        filters.maxPrice = 1000;
-      } else if (priceRange === "1000-1500") {
-        filters.minPrice = 1000;
-        filters.maxPrice = 1500;
-      } else if (priceRange === "1500-2000") {
-        filters.minPrice = 1500;
-        filters.maxPrice = 2000;
-      } else if (priceRange === "2000-3000") {
-        filters.minPrice = 2000;
-        filters.maxPrice = 3000;
-      } else if (priceRange === "3000+") {
-        filters.minPrice = 3000;
-      }
-    }
+    const filters: ProductFilters = {
+      ...(category && { category }),
+      ...(brand && { brand }),
+      ...(searchQuery.trim() && { search: searchQuery }),
+      ...(priceRange && parsePriceRange(priceRange)),
+    };
 
     dispatch(fetchProducts(filters));
   }, [searchQuery, category, brand, priceRange, dispatch]);
