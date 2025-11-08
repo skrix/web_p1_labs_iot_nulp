@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { SocialLinks } from "../components/SocialLinks";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import { carriersApi, type Carrier } from "../services/carriers.api";
 import { ordersApi } from "../services/orders.api";
 
@@ -26,6 +27,37 @@ interface FormValues {
   pickupLocation: string;
   paymentMethod: string;
 }
+
+const validationSchema = Yup.object({
+  firstName: Yup.string()
+    .trim()
+    .required("Введіть ім'я")
+    .max(30, "Ім'я не повинно перевищувати 30 символів"),
+  lastName: Yup.string()
+    .trim()
+    .required("Введіть прізвище")
+    .max(30, "Прізвище не повинно перевищувати 30 символів"),
+  email: Yup.string()
+    .trim()
+    .required("Введіть email")
+    .email("Невірний формат email"),
+  phone: Yup.string()
+    .required("Введіть телефон")
+    .test('phone-format', 'Невірний формат телефону. Очікується: +380XXXXXXXXX або 0XXXXXXXXX', (value) => {
+      if (!value) return false;
+      const cleaned = value.replace(/[\s\-\(\)]/g, '');
+      return /^(\+?38)?0\d{9}$/.test(cleaned);
+    }),
+  city: Yup.string()
+    .trim()
+    .required("Введіть місто"),
+  carrierId: Yup.string()
+    .required("Оберіть спосіб доставки"),
+  pickupLocation: Yup.string()
+    .required("Оберіть місце видачі"),
+  paymentMethod: Yup.string()
+    .required("Оберіть спосіб оплати"),
+});
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -60,51 +92,7 @@ export default function Checkout() {
       pickupLocation: '',
       paymentMethod: '',
     },
-    validate: (values) => {
-      const errors: Partial<Record<keyof FormValues, string>> = {};
-
-      if (!values.firstName.trim()) {
-        errors.firstName = "Введіть ім'я";
-      } else if (values.firstName.length > 30) {
-        errors.firstName = "Ім'я не повинно перевищувати 30 символів";
-      }
-
-      if (!values.lastName.trim()) {
-        errors.lastName = "Введіть прізвище";
-      } else if (values.lastName.length > 30) {
-        errors.lastName = "Прізвище не повинно перевищувати 30 символів";
-      }
-
-      if (!values.email.trim()) {
-        errors.email = "Введіть email";
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-        errors.email = "Невірний формат email";
-      }
-
-      if (!values.phone.trim()) {
-        errors.phone = "Введіть телефон";
-      } else if (!/^(\+?38)?0\d{9}$/.test(values.phone.replace(/[\s\-\(\)]/g, ''))) {
-        errors.phone = "Невірний формат телефону. Очікується: +380XXXXXXXXX або 0XXXXXXXXX";
-      }
-
-      if (!values.city.trim()) {
-        errors.city = "Введіть місто";
-      }
-
-      if (!values.carrierId) {
-        errors.carrierId = "Оберіть спосіб доставки";
-      }
-
-      if (!values.pickupLocation) {
-        errors.pickupLocation = "Оберіть місце видачі";
-      }
-
-      if (!values.paymentMethod) {
-        errors.paymentMethod = "Оберіть спосіб оплати";
-      }
-
-      return errors;
-    },
+    validationSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       setSubmitError(null);
@@ -181,9 +169,7 @@ export default function Checkout() {
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-          {/* Form Fields */}
           <div className="space-y-6 mb-8">
-            {/* First Name and Last Name Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label
@@ -238,7 +224,6 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Email and Phone Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label
@@ -293,7 +278,6 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* City Field */}
             <div>
               <label
                 htmlFor="city"
@@ -320,7 +304,6 @@ export default function Checkout() {
               )}
             </div>
 
-            {/* Delivery Method */}
             <div>
               <label
                 htmlFor="carrierId"
@@ -359,7 +342,6 @@ export default function Checkout() {
               )}
             </div>
 
-            {/* Pickup Location */}
             {formik.values.carrierId && (
               <div>
                 <label
@@ -426,7 +408,6 @@ export default function Checkout() {
               </div>
             )}
 
-            {/* Payment Method */}
             <div>
               <label
                 htmlFor="paymentMethod"
@@ -465,7 +446,6 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* Error Alert */}
           {showError && Object.keys(formik.errors).length > 0 && (
             <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center justify-between">
               <p className="text-red-700 dark:text-red-400">
@@ -483,7 +463,6 @@ export default function Checkout() {
             </div>
           )}
 
-          {/* Submit Error Alert */}
           {submitError && (
             <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center justify-between">
               <p className="text-red-700 dark:text-red-400">{submitError}</p>
@@ -499,7 +478,6 @@ export default function Checkout() {
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
             <Link
               to="/cart"
