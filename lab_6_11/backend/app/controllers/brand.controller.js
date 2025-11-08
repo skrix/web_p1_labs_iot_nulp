@@ -1,94 +1,67 @@
-const db = require('../models');
+const db = require("../models");
 const Brand = db.Brand;
-const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
   try {
-    const data = await Brand.create(req.body);
-    res.send(data);
+    const brand = await Brand.create(req.body);
+    res.status(201).json(brand);
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while creating the Brand."
-    });
+    res.status(500).json({ message: err.message });
   }
 };
 
 exports.findAll = async (req, res) => {
   try {
-    const data = await Brand.findAll();
-    res.send(data);
+    const brands = await Brand.findAll();
+    res.status(200).json(brands);
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving brands."
-    });
+    res.status(500).json({ message: err.message });
   }
 };
 
 exports.findOne = async (req, res) => {
   try {
     const id = req.params.id;
-    const data = await Brand.findOne({
-      where: { id: id }
-    });
+    const brand = await Brand.findByPk(id);
 
-    if (data) {
-      res.send(data);
-    } else {
-      res.status(404).send({
-        message: `Cannot find Brand with id=${id}.`
-      });
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
     }
+
+    res.status(200).json(brand);
   } catch (err) {
-    res.status(500).send({
-      message: "Error retrieving Brand with id=" + req.params.id
-    });
+    res.status(500).json({ message: err.message });
   }
 };
 
 exports.update = async (req, res) => {
   try {
     const id = req.params.id;
+    const brand = await Brand.findByPk(id);
 
-    const num = await Brand.update(req.body, {
-      where: { id: id }
-    });
-
-    if (num == 1) {
-      res.send({
-        message: "Brand was updated successfully."
-      });
-    } else {
-      res.send({
-        message: `Cannot update Brand with id=${id}. Maybe Brand was not found or req.body is empty!`
-      });
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
     }
+
+    await brand.update(req.body);
+    res.status(200).json(brand);
   } catch (err) {
-    res.status(500).send({
-      message: "Error updating Brand with id=" + req.params.id
-    });
+    res.status(500).json({ message: err.message });
   }
 };
 
 exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
+    const brand = await Brand.findByPk(id);
 
-    const num = await Brand.destroy({
-      where: { id: id }
-    });
-
-    if (num == 1) {
-      res.send({
-        message: "Brand was deleted successfully!"
-      });
-    } else {
-      res.send({
-        message: `Cannot delete Brand with id=${id}. Maybe Brand was not found!`
-      });
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
     }
+
+    await brand.destroy();
+    res.status(200).json({ message: "Brand deleted successfully" });
   } catch (err) {
-    res.status(500).send({
-      message: "Could not delete Brand with id=" + req.params.id
-    });
+    res.status(500).json({ message: err.message });
   }
 };

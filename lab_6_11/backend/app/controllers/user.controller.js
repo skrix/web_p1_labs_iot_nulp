@@ -3,8 +3,8 @@ const User = db.User;
 
 exports.create = async (req, res) => {
   try {
-    const data = await User.create(req.body);
-    res.status(201).json(data);
+    const user = await User.create(req.body);
+    res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -12,8 +12,8 @@ exports.create = async (req, res) => {
 
 exports.findAll = async (req, res) => {
   try {
-    const data = await User.findAll();
-    res.json(data);
+    const users = await User.findAll();
+    res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -21,9 +21,14 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   try {
-    const data = await User.findByPk(req.params.id);
-    if (!data) return res.status(404).json({ message: "User not found" });
-    res.json(data);
+    const id = req.params.id;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -31,11 +36,15 @@ exports.findOne = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const [num] = await User.update(req.body, {
-      where: { id: req.params.id },
-    });
-    if (num === 1) res.json({ message: "User updated successfully" });
-    else res.status(404).json({ message: "User not found" });
+    const id = req.params.id;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await user.update(req.body);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -43,9 +52,15 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const num = await User.destroy({ where: { id: req.params.id } });
-    if (num === 1) res.json({ message: "User deleted successfully" });
-    else res.status(404).json({ message: "User not found" });
+    const id = req.params.id;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await user.destroy();
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

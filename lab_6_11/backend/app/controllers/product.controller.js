@@ -26,14 +26,14 @@ exports.create = async (req, res) => {
       include: [
         {
           model: Category,
-          as: 'categories',
-          attributes: ['id', 'name', 'slug', 'label'],
+          as: "categories",
+          attributes: ["id", "name", "slug", "label"],
           through: { attributes: [] }
         },
         {
           model: Brand,
-          as: 'brand',
-          attributes: ['id', 'name', 'slug']
+          as: "brand",
+          attributes: ["id", "name", "slug"]
         }
       ]
     });
@@ -51,8 +51,8 @@ exports.findAll = async (req, res) => {
     let whereClause = {};
     let brandInclude = {
       model: Brand,
-      as: 'brand',
-      attributes: ['id', 'name', 'slug']
+      as: "brand",
+      attributes: ["id", "name", "slug"]
     };
 
     if (brand) {
@@ -62,8 +62,12 @@ exports.findAll = async (req, res) => {
 
     if (minPrice || maxPrice) {
       whereClause.price = {};
-      if (minPrice) whereClause.price[db.Sequelize.Op.gte] = parseFloat(minPrice);
-      if (maxPrice) whereClause.price[db.Sequelize.Op.lte] = parseFloat(maxPrice);
+      if (minPrice) {
+        whereClause.price[db.Sequelize.Op.gte] = parseFloat(minPrice);
+      }
+      if (maxPrice) {
+        whereClause.price[db.Sequelize.Op.lte] = parseFloat(maxPrice);
+      }
     }
 
     if (search) {
@@ -75,8 +79,8 @@ exports.findAll = async (req, res) => {
 
     const categoryInclude = {
       model: Category,
-      as: 'categories',
-      attributes: ['id', 'name', 'slug', 'label'],
+      as: "categories",
+      attributes: ["id", "name", "slug", "label"],
       through: { attributes: [] }
     };
 
@@ -85,13 +89,13 @@ exports.findAll = async (req, res) => {
       categoryInclude.required = true;
     }
 
-    const data = await Product.findAll({
+    const products = await Product.findAll({
       where: whereClause,
       include: [categoryInclude, brandInclude],
-      order: [['createdAt', 'DESC']]
+      order: [["createdAt", "DESC"]]
     });
 
-    res.json(data);
+    res.status(200).json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -99,27 +103,28 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   try {
-    const data = await Product.findByPk(req.params.id, {
+    const id = req.params.id;
+    const product = await Product.findByPk(id, {
       include: [
         {
           model: Category,
-          as: 'categories',
-          attributes: ['id', 'name', 'slug', 'label'],
+          as: "categories",
+          attributes: ["id", "name", "slug", "label"],
           through: { attributes: [] }
         },
         {
           model: Brand,
-          as: 'brand',
-          attributes: ['id', 'name', 'slug']
+          as: "brand",
+          attributes: ["id", "name", "slug"]
         }
       ]
     });
 
-    if (!data) {
+    if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json(data);
+    res.status(200).json(product);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -127,17 +132,16 @@ exports.findOne = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
+    const id = req.params.id;
     const { categoryIds, ...productData } = req.body;
 
-    const [num] = await Product.update(productData, {
-      where: { id: req.params.id }
-    });
+    const product = await Product.findByPk(id);
 
-    if (num === 0) {
+    if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const product = await Product.findByPk(req.params.id);
+    await product.update(productData);
 
     if (categoryIds && Array.isArray(categoryIds)) {
       const categories = await Category.findAll({
@@ -146,23 +150,23 @@ exports.update = async (req, res) => {
       await product.setCategories(categories);
     }
 
-    const updatedProduct = await Product.findByPk(req.params.id, {
+    const updatedProduct = await Product.findByPk(id, {
       include: [
         {
           model: Category,
-          as: 'categories',
-          attributes: ['id', 'name', 'slug', 'label'],
+          as: "categories",
+          attributes: ["id", "name", "slug", "label"],
           through: { attributes: [] }
         },
         {
           model: Brand,
-          as: 'brand',
-          attributes: ['id', 'name', 'slug']
+          as: "brand",
+          attributes: ["id", "name", "slug"]
         }
       ]
     });
 
-    res.json(updatedProduct);
+    res.status(200).json(updatedProduct);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -170,15 +174,15 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const num = await Product.destroy({
-      where: { id: req.params.id }
-    });
+    const id = req.params.id;
+    const product = await Product.findByPk(id);
 
-    if (num === 1) {
-      res.json({ message: "Product deleted successfully" });
-    } else {
-      res.status(404).json({ message: "Product not found" });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     }
+
+    await product.destroy();
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
