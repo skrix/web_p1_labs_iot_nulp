@@ -19,7 +19,7 @@ export default function Product() {
     <ProtectedRoute>
     <Layout>
       <div className="container mx-auto px-4 pt-24 pb-16 bg-white dark:bg-gray-950 min-h-screen">
-        <ProductPage productId={id || "1"} onBack={() => navigate(-1)} />
+        <ProductPage productId={id} onBack={() => navigate(-1)} />
       </div>
     </Layout>
     </ProtectedRoute>

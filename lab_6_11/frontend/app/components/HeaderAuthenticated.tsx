@@ -1,5 +1,4 @@
 import { Logo } from "./Logo";
-import { CartBadge } from "./CartBadge";
 import { HamburgerButton } from "./HamburgerButton";
 import { HeaderLink } from "./HeaderLink";
 import { CartLink } from "./CartLink";
@@ -31,9 +30,8 @@ export function HeaderAuthenticated({
           <nav className="hidden md:flex gap-6 items-center">
             <HeaderLink to="/">Головна</HeaderLink>
             <HeaderLink to="/catalog">Магазин</HeaderLink>
-            <CartLink to="/cart">
+            <CartLink to="/cart" count={cartItemCount}>
               Кошик
-              <CartBadge count={cartItemCount} />
             </CartLink>
 
             <div className="flex items-center gap-4 ml-4 pl-4 border-l border-gray-300 dark:border-gray-700">
@@ -61,9 +59,8 @@ export function HeaderAuthenticated({
             <HeaderLink to="/catalog" onClick={closeMenu}>
               Магазин
             </HeaderLink>
-            <CartLink to="/cart">
+            <CartLink to="/cart" count={cartItemCount}>
               Кошик
-              <CartBadge count={cartItemCount} />
             </CartLink>
 
             <div className="border-t border-gray-300 dark:border-gray-700 pt-4 mt-2">
