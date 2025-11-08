@@ -2,6 +2,7 @@ import { Logo } from "./Logo";
 import { HamburgerButton } from "./HamburgerButton";
 import { HeaderLink } from "./HeaderLink";
 import { CartLink } from "./CartLink";
+import { HeaderUserProfile } from "./HeaderUserProfile";
 import { useState } from "react";
 
 interface HeaderAuthenticatedProps {
@@ -30,21 +31,9 @@ export function HeaderAuthenticated({
           <nav className="hidden md:flex gap-6 items-center">
             <HeaderLink to="/">Головна</HeaderLink>
             <HeaderLink to="/catalog">Магазин</HeaderLink>
-            <CartLink to="/cart" count={cartItemCount}>
-              Кошик
-            </CartLink>
+            <CartLink to="/cart" count={cartItemCount}>Кошик</CartLink>
 
-            <div className="flex items-center gap-4 ml-4 pl-4 border-l border-gray-300 dark:border-gray-700">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {username}
-              </span>
-              <button
-                onClick={onLogout}
-                className="px-4 py-2 text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-900 dark:border-white transition-colors"
-              >
-                Вийти
-              </button>
-            </div>
+            <HeaderUserProfile username={username} onLogout={onLogout} />
           </nav>
 
           <HamburgerButton isOpen={isMenuOpen} onClick={toggleMenu} />
@@ -63,20 +52,10 @@ export function HeaderAuthenticated({
               Кошик
             </CartLink>
 
-            <div className="border-t border-gray-300 dark:border-gray-700 pt-4 mt-2">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 px-6">
-                {username}
-              </p>
-              <button
-                onClick={() => {
-                  onLogout();
-                  closeMenu();
-                }}
-                className="w-full px-6 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-900 dark:border-white transition-colors"
-              >
-                Вийти
-              </button>
-            </div>
+            <HeaderUserProfile username={username} onLogout={() => {
+              onLogout();
+              closeMenu();
+            }} />
           </nav>
         )}
       </div>
