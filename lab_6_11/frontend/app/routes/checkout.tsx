@@ -13,6 +13,7 @@ import { carriersApi, type Carrier } from "../services/carriers.api";
 import { carrierLocationsApi, type CarrierLocation } from "../services/carrierLocations.api";
 import { ordersApi } from "../services/orders.api";
 import { PAYMENT_METHOD_OPTIONS } from "../utils/filters";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -171,6 +172,7 @@ export default function Checkout() {
 
   if (items.length === 0) {
     return (
+      <ProtectedRoute>
       <Layout>
         <div className="container mx-auto px-4 pt-24 pb-12 bg-white dark:bg-gray-950 min-h-screen">
           <div className="text-center py-12">
@@ -186,10 +188,12 @@ export default function Checkout() {
           </div>
         </div>
       </Layout>
+      </ProtectedRoute>
     );
   }
 
   return (
+    <ProtectedRoute>
     <Layout>
       <div className="container mx-auto px-4 pt-24 pb-12 bg-white dark:bg-gray-950 min-h-screen">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
@@ -358,5 +362,6 @@ export default function Checkout() {
         </form>
       </div>
     </Layout>
+    </ProtectedRoute>
   );
 }
