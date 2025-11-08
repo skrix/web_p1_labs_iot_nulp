@@ -20,22 +20,22 @@ export default function Catalog() {
 
   return (
     <ProtectedRoute>
-      <Layout>
-        <div className="container mx-auto px-4 pt-24 bg-white dark:bg-gray-950 min-h-screen">
-          <FilterBar
-            onSearchChange={setSearchQuery}
-            onCategoryChange={setCategory}
-            onBrandChange={setBrand}
-            onPriceChange={setPriceRange}
-          />
-          <ProductsCatalog
-            searchQuery={searchQuery}
-            category={category}
-            brand={brand}
-            priceRange={priceRange}
-          />
-        </div>
-      </Layout>
+    <Layout>
+      <div className="container mx-auto px-4 pt-24 bg-white dark:bg-gray-950 min-h-screen">
+        <FilterBar
+          onSearchChange={setSearchQuery}
+          onCategoryChange={setCategory}
+          onBrandChange={setBrand}
+          onPriceChange={setPriceRange}
+        />
+        <ProductsCatalog
+          searchQuery={searchQuery}
+          category={category}
+          brand={brand}
+          priceRange={priceRange}
+        />
+      </div>
+    </Layout>
     </ProtectedRoute>
   );
 }

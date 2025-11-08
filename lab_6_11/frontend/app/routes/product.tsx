@@ -17,11 +17,11 @@ export default function Product() {
 
   return (
     <ProtectedRoute>
-      <Layout>
-        <div className="container mx-auto px-4 pt-24 pb-16 bg-white dark:bg-gray-950 min-h-screen">
-          <ProductPage productId={id || "1"} onBack={() => navigate("/catalog")} />
-        </div>
-      </Layout>
+    <Layout>
+      <div className="container mx-auto px-4 pt-24 pb-16 bg-white dark:bg-gray-950 min-h-screen">
+        <ProductPage productId={id} onBack={() => navigate("/catalog")} />
+      </div>
+    </Layout>
     </ProtectedRoute>
   );
 }

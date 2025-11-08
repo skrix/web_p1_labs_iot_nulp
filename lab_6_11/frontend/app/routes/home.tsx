@@ -15,11 +15,11 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <ProtectedRoute>
-      <Layout>
-        <Hero />
-        <TilesSection />
-        <ProductsSection />
-      </Layout>
+    <Layout>
+      <Hero />
+      <TilesSection />
+      <ProductsSection />
+    </Layout>
     </ProtectedRoute>
   );
 }
