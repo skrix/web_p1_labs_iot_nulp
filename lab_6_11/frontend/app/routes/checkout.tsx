@@ -1,11 +1,13 @@
 import type { Route } from "./+types/checkout";
 import { Layout } from "../components/Layout";
-import { useAppSelector } from "../store/hooks";
-import { selectCartItems, selectCartTotalAmount } from "../store/cartSlice";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { selectCartItems, selectCartTotalAmount, clearCart } from "../store/cartSlice";
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SocialLinks } from "../components/SocialLinks";
 import { useFormik } from "formik";
+import { carriersApi, type Carrier } from "../services/carriers.api";
+import { ordersApi } from "../services/orders.api";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,15 +22,32 @@ interface FormValues {
   email: string;
   phone: string;
   city: string;
-  deliveryMethod: string;
+  carrierId: string;
   pickupLocation: string;
   paymentMethod: string;
 }
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
   const [showError, setShowError] = useState(false);
+  const [carriers, setCarriers] = useState<Carrier[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Fetch active carriers on component mount
+  useEffect(() => {
+    const fetchCarriers = async () => {
+      try {
+        const activeCarriers = await carriersApi.getAll();
+        setCarriers(activeCarriers);
+      } catch (error) {
+        console.error('Failed to fetch carriers:', error);
+      }
+    };
+    fetchCarriers();
+  }, []);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -37,7 +56,7 @@ export default function Checkout() {
       email: '',
       phone: '',
       city: '',
-      deliveryMethod: '',
+      carrierId: '',
       pickupLocation: '',
       paymentMethod: '',
     },
@@ -72,8 +91,8 @@ export default function Checkout() {
         errors.city = "Введіть місто";
       }
 
-      if (!values.deliveryMethod) {
-        errors.deliveryMethod = "Оберіть спосіб доставки";
+      if (!values.carrierId) {
+        errors.carrierId = "Оберіть спосіб доставки";
       }
 
       if (!values.pickupLocation) {
@@ -86,11 +105,41 @@ export default function Checkout() {
 
       return errors;
     },
-    onSubmit: (values) => {
-      // TODO: Send to backend
-      console.log('Form submitted:', values);
-      alert('Замовлення успішно оформлено! (Demo)');
-      navigate('/catalog');
+    onSubmit: async (values) => {
+      setIsSubmitting(true);
+      setSubmitError(null);
+
+      try {
+        // Prepare order items from cart
+        const orderItems = items.map(item => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+        }));
+
+        // Create order
+        const orderData = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          phone: values.phone,
+          city: values.city,
+          carrierId: values.carrierId ? parseInt(values.carrierId) : null,
+          pickupLocation: values.pickupLocation,
+          paymentMethod: values.paymentMethod as any,
+          items: orderItems,
+        };
+
+        await ordersApi.create(orderData);
+        dispatch(clearCart());
+        navigate('/catalog', {
+          state: { message: 'Замовлення успішно оформлено!' }
+        });
+      } catch (error: any) {
+        console.error('Failed to create order:', error);
+        setSubmitError(error.response?.data?.message || 'Не вдалося оформити замовлення. Спробуйте ще раз.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
   });
 
@@ -274,19 +323,19 @@ export default function Checkout() {
             {/* Delivery Method */}
             <div>
               <label
-                htmlFor="deliveryMethod"
+                htmlFor="carrierId"
                 className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
               >
                 Спосіб доставки
               </label>
               <select
-                id="deliveryMethod"
-                name="deliveryMethod"
-                value={formik.values.deliveryMethod}
+                id="carrierId"
+                name="carrierId"
+                value={formik.values.carrierId}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className={`w-full px-4 py-3 border ${
-                  formik.touched.deliveryMethod && formik.errors.deliveryMethod
+                  formik.touched.carrierId && formik.errors.carrierId
                     ? 'border-red-500 focus:ring-red-500'
                     : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
                 } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
@@ -299,24 +348,25 @@ export default function Checkout() {
                 }}
               >
                 <option value="">Оберіть спосіб доставки</option>
-                <option value="nova-poshta">Нова Пошта</option>
-                <option value="ukrposhta">Укрпошта</option>
-                <option value="meest">Meest Express</option>
-                <option value="self-pickup">Самовивіз</option>
+                {carriers.map((carrier) => (
+                  <option key={carrier.id} value={carrier.id}>
+                    {carrier.name}
+                  </option>
+                ))}
               </select>
-              {formik.touched.deliveryMethod && formik.errors.deliveryMethod && (
-                <p className="mt-1 text-sm text-red-500">{formik.errors.deliveryMethod}</p>
+              {formik.touched.carrierId && formik.errors.carrierId && (
+                <p className="mt-1 text-sm text-red-500">{formik.errors.carrierId}</p>
               )}
             </div>
 
             {/* Pickup Location */}
-            {formik.values.deliveryMethod && (
+            {formik.values.carrierId && (
               <div>
                 <label
                   htmlFor="pickupLocation"
                   className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
                 >
-                  {formik.values.deliveryMethod === 'self-pickup'
+                  {carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'self-pickup'
                     ? 'Локація магазину'
                     : 'Відділення перевізника'}
                 </label>
@@ -340,7 +390,7 @@ export default function Checkout() {
                   }}
                 >
                   <option value="">Оберіть локацію</option>
-                  {formik.values.deliveryMethod === 'nova-poshta' ? (
+                  {carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'nova-poshta' ? (
                     <>
                       <option value="np-1">Відділення №1 - вул. Хрещатик, 1</option>
                       <option value="np-2">Відділення №5 - вул. Шевченка, 15</option>
@@ -348,21 +398,21 @@ export default function Checkout() {
                       <option value="np-4">Відділення №20 - вул. Лесі Українки, 8</option>
                       <option value="np-5">Відділення №33 - вул. Бандери, 25</option>
                     </>
-                  ) : formik.values.deliveryMethod === 'ukrposhta' ? (
+                  ) : carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'ukrposhta' ? (
                     <>
                       <option value="up-1">Відділення №1 - вул. Центральна, 5</option>
                       <option value="up-2">Відділення №3 - вул. Грушевського, 12</option>
                       <option value="up-3">Відділення №7 - просп. Незалежності, 30</option>
                       <option value="up-4">Відділення №10 - вул. Франка, 18</option>
                     </>
-                  ) : formik.values.deliveryMethod === 'meest' ? (
+                  ) : carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'meest' ? (
                     <>
                       <option value="meest-1">Відділення №1 - вул. Городоцька, 25</option>
                       <option value="meest-2">Відділення №2 - вул. Наукова, 7</option>
                       <option value="meest-3">Відділення №5 - просп. В. Чорновола, 53</option>
                       <option value="meest-4">Відділення №8 - вул. Стрийська, 120</option>
                     </>
-                  ) : formik.values.deliveryMethod === 'self-pickup' ? (
+                  ) : carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'self-pickup' ? (
                     <>
                       <option value="shop-center">Магазин - вул. Театральна, 10 (Центр)</option>
                       <option value="shop-mall">Магазин - ТРЦ King Cross Leopolis</option>
@@ -433,6 +483,22 @@ export default function Checkout() {
             </div>
           )}
 
+          {/* Submit Error Alert */}
+          {submitError && (
+            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center justify-between">
+              <p className="text-red-700 dark:text-red-400">{submitError}</p>
+              <button
+                type="button"
+                onClick={() => setSubmitError(null)}
+                className="text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
             <Link
@@ -443,9 +509,10 @@ export default function Checkout() {
             </Link>
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors font-bold text-lg"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Продовжити
+              {isSubmitting ? 'Обробка...' : 'Продовжити'}
             </button>
           </div>
         </form>
