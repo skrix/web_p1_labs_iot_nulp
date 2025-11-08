@@ -1,5 +1,6 @@
 import type { Route } from "./+types/checkout";
 import { Layout } from "../components/Layout";
+import { ErrorMessage } from "../components/ErrorMessage";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { selectCartItems, selectCartTotalAmount, clearCart } from "../store/cartSlice";
 import { Link, useNavigate } from "react-router";
@@ -438,7 +439,7 @@ export default function Checkout() {
                 <option value="cash">Готівка при отриманні</option>
                 <option value="card">Банківська карта (Visa/Mastercard)</option>
                 <option value="online">Онлайн оплата (Apple Pay/Google Pay)</option>
-                <option value="bank-transfer">Банківський переказ</option>
+                <option value="transfer">Банківський переказ</option>
               </select>
               {formik.touched.paymentMethod && formik.errors.paymentMethod && (
                 <p className="mt-1 text-sm text-red-500">{formik.errors.paymentMethod}</p>
@@ -447,35 +448,17 @@ export default function Checkout() {
           </div>
 
           {showError && Object.keys(formik.errors).length > 0 && (
-            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center justify-between">
-              <p className="text-red-700 dark:text-red-400">
-                О, ні! Змініть декілька речей і спробуйте знову.
-              </p>
-              <button
-                type="button"
-                onClick={() => setShowError(false)}
-                className="text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+            <ErrorMessage
+              message="О, ні! Скоригуйте введені дані і спробуйте знову."
+              onClose={() => setShowError(false)}
+            />
           )}
 
           {submitError && (
-            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center justify-between">
-              <p className="text-red-700 dark:text-red-400">{submitError}</p>
-              <button
-                type="button"
-                onClick={() => setSubmitError(null)}
-                className="text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+            <ErrorMessage
+              message={submitError}
+              onClose={() => setSubmitError(null)}
+            />
           )}
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
