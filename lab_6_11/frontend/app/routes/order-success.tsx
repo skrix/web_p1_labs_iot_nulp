@@ -2,6 +2,7 @@ import type { Route } from "./+types/order-success";
 import { Layout } from "../components/Layout";
 import { Link, useLocation } from "react-router";
 import { useEffect } from "react";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -52,6 +53,7 @@ export default function OrderSuccess() {
   }
 
   return (
+    <ProtectedRoute>
     <Layout>
       <div className="container mx-auto px-4 pt-24 pb-12 bg-white dark:bg-gray-950 min-h-screen">
         <div className="max-w-2xl mx-auto">
@@ -181,5 +183,6 @@ export default function OrderSuccess() {
         </div>
       </div>
     </Layout>
+    </ProtectedRoute>
   );
 }

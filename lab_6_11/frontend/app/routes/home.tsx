@@ -3,6 +3,7 @@ import { Layout } from "../components/Layout";
 import { Hero } from "../components/Hero";
 import { TilesSection } from "../components/TilesSection";
 import { ProductsSection } from "../components/ProductsSection";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,10 +14,12 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <Layout>
-      <Hero />
-      <TilesSection />
-      <ProductsSection />
-    </Layout>
+    <ProtectedRoute>
+      <Layout>
+        <Hero />
+        <TilesSection />
+        <ProductsSection />
+      </Layout>
+    </ProtectedRoute>
   );
 }

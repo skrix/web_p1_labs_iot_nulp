@@ -5,6 +5,7 @@ import { CartEmpty } from "../components/CartEmpty";
 import { CartSummary } from "../components/CartSummary";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectCartItems, selectCartTotalAmount, clearCart } from "../store/cartSlice";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -26,7 +27,8 @@ export default function Cart() {
   };
 
   return (
-    <Layout>
+    <ProtectedRoute>
+      <Layout>
       <div className="container mx-auto px-4 pt-24 pb-12 bg-white dark:bg-gray-950 min-h-screen">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
@@ -61,5 +63,6 @@ export default function Cart() {
         )}
       </div>
     </Layout>
+    </ProtectedRoute>
   );
 }
