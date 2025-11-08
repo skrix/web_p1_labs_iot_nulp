@@ -1,11 +1,14 @@
 import type { Route } from "./+types/sign-in";
 import { Layout } from "../components/Layout";
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { FormInput } from "../components/FormInput";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { setCredentials, selectIsAuthenticated } from "../store/authSlice";
+import { authApi } from "../services/auth.api";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -30,8 +33,16 @@ const validationSchema = Yup.object({
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -44,11 +55,20 @@ export default function SignIn() {
       setSubmitError(null);
 
       try {
-        // TODO: Implement actual API call for user login
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await authApi.signIn(values);
+
+        dispatch(setCredentials({
+          user: {
+            id: response.user.id,
+            email: response.user.email,
+            username: response.user.firstName || response.user.email.split('@')[0],
+          },
+          token: response.token,
+        }));
+
         navigate('/');
       } catch (error: any) {
-        console.error('Failed to login:', error);
+        console.error('Failed to sign in:', error);
         setSubmitError(error.response?.data?.message || 'Не вдалося увійти. Перевірте свої дані.');
       } finally {
         setIsSubmitting(false);

@@ -1,11 +1,14 @@
 import type { Route } from "./+types/sign-up";
 import { Layout } from "../components/Layout";
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { FormInput } from "../components/FormInput";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { setCredentials, selectIsAuthenticated } from "../store/authSlice";
+import { authApi } from "../services/auth.api";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,18 +18,24 @@ export function meta({}: Route.MetaArgs) {
 }
 
 interface FormValues {
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
 const validationSchema = Yup.object({
-  username: Yup.string()
+  firstName: Yup.string()
     .trim()
-    .required("Введіть ім'я користувача")
-    .min(3, "Ім'я користувача повинно містити мінімум 3 символи")
-    .max(30, "Ім'я користувача не повинно перевищувати 30 символів"),
+    .required("Введіть ім'я")
+    .min(2, "Ім'я повинно містити мінімум 2 символи")
+    .max(30, "Ім'я не повинно перевищувати 30 символів"),
+  lastName: Yup.string()
+    .trim()
+    .required("Введіть прізвище")
+    .min(2, "Прізвище повинно містити мінімум 2 символи")
+    .max(30, "Прізвище не повинно перевищувати 30 символів"),
   email: Yup.string()
     .trim()
     .required("Введіть email")
@@ -45,12 +54,21 @@ const validationSchema = Yup.object({
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
   const formik = useFormik<FormValues>({
     initialValues: {
-      username: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -61,11 +79,25 @@ export default function SignUp() {
       setSubmitError(null);
 
       try {
-        // TODO: Implement actual API call for user registration
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await authApi.signUp({
+          email: values.email,
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+        });
+
+        dispatch(setCredentials({
+          user: {
+            id: response.user.id,
+            email: response.user.email,
+            username: `${response.user.firstName} ${response.user.lastName}`.trim() || response.user.email.split('@')[0],
+          },
+          token: response.token,
+        }));
+
         navigate('/');
       } catch (error: any) {
-        console.error('Failed to register:', error);
+        console.error('Failed to sign up:', error);
         setSubmitError(error.response?.data?.message || 'Не вдалося зареєструватися. Спробуйте ще раз.');
       } finally {
         setIsSubmitting(false);
@@ -92,17 +124,31 @@ export default function SignUp() {
 
           <form onSubmit={formik.handleSubmit} className="space-y-6">
             <FormInput
-              label="Ім'я користувача"
-              id="username"
-              name="username"
+              label="Ім'я"
+              id="firstName"
+              name="firstName"
               type="text"
-              placeholder="Введіть ім'я користувача"
-              value={formik.values.username}
+              placeholder="Введіть ім'я"
+              value={formik.values.firstName}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               disabled={isSubmitting}
-              touched={formik.touched.username}
-              error={formik.errors.username}
+              touched={formik.touched.firstName}
+              error={formik.errors.firstName}
+            />
+
+            <FormInput
+              label="Прізвище"
+              id="lastName"
+              name="lastName"
+              type="text"
+              placeholder="Введіть прізвище"
+              value={formik.values.lastName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              disabled={isSubmitting}
+              touched={formik.touched.lastName}
+              error={formik.errors.lastName}
             />
 
             <FormInput
