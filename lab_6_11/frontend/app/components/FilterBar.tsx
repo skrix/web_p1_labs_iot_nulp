@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { SearchBar } from "./SearchBar";
+import { FilterSearch } from "./FilterSearch";
 import { FilterDropdown } from "./FilterDropdown";
 import { categoriesApi, type Category } from "../services/categories.api";
 import { brandsApi, type Brand } from "../services/brands.api";
+import { PRICE_RANGE_OPTIONS } from "../utils/filters";
 
 interface FilterBarProps {
   onSearchChange: (search: string) => void;
@@ -38,14 +39,6 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
 
     fetchFilters();
   }, []);
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-  };
-
-  const handleApplySearch = () => {
-    onSearchChange(search);
-  };
 
   const handleCategoryChange = (value: string) => {
     setFilterCategory(value);
@@ -85,16 +78,6 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     label: brand.name
   }));
 
-  const priceOptions = [
-    { value: "0-300", label: "До 300 ₴" },
-    { value: "300-600", label: "300-600 ₴" },
-    { value: "600-1000", label: "600-1000 ₴" },
-    { value: "1000-1500", label: "1000-1500 ₴" },
-    { value: "1500-2000", label: "1500-2000 ₴" },
-    { value: "2000-3000", label: "2000-3000 ₴" },
-    { value: "3000+", label: "Понад 3000 ₴" },
-  ];
-
   return (
     <div className="bg-white dark:bg-gray-950 py-6 mb-8">
       <div className="container mx-auto px-4">
@@ -118,16 +101,20 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
               value={filterPrice}
               onChange={handlePriceChange}
               label="Ціна"
-              options={priceOptions}
+              options={PRICE_RANGE_OPTIONS}
             />
           </div>
 
           <div className="w-full md:w-80">
-            <SearchBar value={search} onChange={handleSearchChange} onSearch={handleApplySearch} />
+            <FilterSearch
+              value={search}
+              onChange={setSearch}
+              onSearch={() => onSearchChange(search)}
+            />
           </div>
 
           <button
-            onClick={handleApplySearch}
+            onClick={() => onSearchChange(search)}
             className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer"
           >
             Пошук

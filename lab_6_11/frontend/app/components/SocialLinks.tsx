@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { SocialIcon } from "./SocialIcon";
+import { SocialLink } from "./SocialLink";
 
 const SOCIAL_LINKS = [
   {
@@ -56,7 +56,7 @@ export function SocialLinks() {
   const socialIcons = useMemo(
     () =>
       SOCIAL_LINKS.map((link) => (
-        <SocialIcon
+        <SocialLink
           key={link.name}
           href={link.href}
           ariaLabel={link.ariaLabel}
@@ -64,7 +64,7 @@ export function SocialLinks() {
           hoverColor={link.hoverColor}
         >
           {link.icon}
-        </SocialIcon>
+        </SocialLink>
       )),
     []
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Route } from "./+types/catalog";
 import { Layout } from "../components/Layout";
-import { CatalogGrid } from "../components/CatalogGrid";
+import { ProductsCatalog } from "../components/ProductsCatalog";
 import { FilterBar } from "../components/FilterBar";
 
 export function meta({}: Route.MetaArgs) {
@@ -26,7 +26,7 @@ export default function Catalog() {
           onBrandChange={setBrand}
           onPriceChange={setPriceRange}
         />
-        <CatalogGrid
+        <ProductsCatalog
           searchQuery={searchQuery}
           category={category}
           brand={brand}

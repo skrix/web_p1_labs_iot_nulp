@@ -1,16 +1,18 @@
 import type { Route } from "./+types/checkout";
 import { Layout } from "../components/Layout";
 import { ErrorMessage } from "../components/ErrorMessage";
+import { FormInput } from "../components/FormInput";
+import { FormSelect } from "../components/FormSelect";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { selectCartItems, selectCartTotalAmount, clearCart } from "../store/cartSlice";
 import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { SocialLinks } from "../components/SocialLinks";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { carriersApi, type Carrier } from "../services/carriers.api";
 import { carrierLocationsApi, type CarrierLocation } from "../services/carrierLocations.api";
 import { ordersApi } from "../services/orders.api";
+import { PAYMENT_METHOD_OPTIONS } from "../utils/filters";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -153,14 +155,15 @@ export default function Checkout() {
             carrierId: parseInt(formik.values.carrierId)
           });
           setCarrierLocations(locations);
-          if (formik.values.pickupLocation) {
-            formik.setFieldValue('pickupLocation', '');
-          }
+          // Reset pickup location when carrier changes
+          formik.setFieldValue('pickupLocation', '');
         } catch (error) {
           console.error('Failed to fetch carrier locations:', error);
+          setCarrierLocations([]);
         }
       } else {
         setCarrierLocations([]);
+        formik.setFieldValue('pickupLocation', '');
       }
     };
     fetchLocations();
@@ -196,255 +199,131 @@ export default function Checkout() {
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           <div className="space-y-6 mb-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-                >
-                  Ім'я
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formik.values.firstName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-3 border ${
-                    formik.touched.firstName && formik.errors.firstName
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                  } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-                  placeholder="Введіть ім'я"
-                />
-                {formik.touched.firstName && formik.errors.firstName && (
-                  <p className="mt-1 text-sm text-red-500">{formik.errors.firstName}</p>
-                )}
-              </div>
+              <FormInput
+                label="Ім'я"
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formik.values.firstName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.errors.firstName}
+                touched={formik.touched.firstName}
+                placeholder="Введіть ім'я"
+              />
 
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-                >
-                  Прізвище
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formik.values.lastName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-3 border ${
-                    formik.touched.lastName && formik.errors.lastName
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                  } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-                  placeholder="Введіть прізвище"
-                />
-                {formik.touched.lastName && formik.errors.lastName && (
-                  <p className="mt-1 text-sm text-red-500">{formik.errors.lastName}</p>
-                )}
-              </div>
+              <FormInput
+                label="Прізвище"
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formik.values.lastName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.errors.lastName}
+                touched={formik.touched.lastName}
+                placeholder="Введіть прізвище"
+              />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-3 border ${
-                    formik.touched.email && formik.errors.email
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                  } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-                  placeholder="example@email.com"
-                />
-                {formik.touched.email && formik.errors.email && (
-                  <p className="mt-1 text-sm text-red-500">{formik.errors.email}</p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-                >
-                  Телефон
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formik.values.phone}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-3 border ${
-                    formik.touched.phone && formik.errors.phone
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                  } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-                  placeholder="+380 XX XXX XX XX"
-                />
-                {formik.touched.phone && formik.errors.phone && (
-                  <p className="mt-1 text-sm text-red-500">{formik.errors.phone}</p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="city"
-                className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-              >
-                Місто
-              </label>
-              <input
-                type="text"
-                id="city"
-                name="city"
-                value={formik.values.city}
+              <FormInput
+                label="Email"
+                type="email"
+                id="email"
+                name="email"
+                value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`w-full px-4 py-3 border ${
-                  formik.touched.city && formik.errors.city
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-                placeholder="Введіть місто"
+                error={formik.errors.email}
+                touched={formik.touched.email}
+                placeholder="example@email.com"
               />
-              {formik.touched.city && formik.errors.city && (
-                <p className="mt-1 text-sm text-red-500">{formik.errors.city}</p>
-              )}
-            </div>
 
-            <div>
-              <label
-                htmlFor="carrierId"
-                className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-              >
-                Спосіб доставки
-              </label>
-              <select
-                id="carrierId"
-                name="carrierId"
-                value={formik.values.carrierId}
+              <FormInput
+                label="Телефон"
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formik.values.phone}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`w-full px-4 py-3 border ${
-                  formik.touched.carrierId && formik.errors.carrierId
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
-                  backgroundPosition: 'right 0.5rem center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '1.5em 1.5em',
-                  paddingRight: '2.5rem',
-                }}
-              >
-                <option value="">Оберіть спосіб доставки</option>
-                {carriers.map((carrier) => (
-                  <option key={carrier.id} value={carrier.id}>
-                    {carrier.name}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.carrierId && formik.errors.carrierId && (
-                <p className="mt-1 text-sm text-red-500">{formik.errors.carrierId}</p>
-              )}
+                error={formik.errors.phone}
+                touched={formik.touched.phone}
+                placeholder="+380 XX XXX XX XX"
+              />
             </div>
+
+            <FormInput
+              label="Місто"
+              type="text"
+              id="city"
+              name="city"
+              value={formik.values.city}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.city}
+              touched={formik.touched.city}
+              placeholder="Введіть місто"
+            />
+
+            <FormSelect
+              label="Спосіб доставки"
+              id="carrierId"
+              name="carrierId"
+              value={formik.values.carrierId}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.carrierId}
+              touched={formik.touched.carrierId}
+            >
+              <option value="">Оберіть спосіб доставки</option>
+              {carriers.map((carrier) => (
+                <option key={carrier.id} value={carrier.id}>
+                  {carrier.name}
+                </option>
+              ))}
+            </FormSelect>
 
             {formik.values.carrierId && (
-              <div>
-                <label
-                  htmlFor="pickupLocation"
-                  className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-                >
-                  {carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'self-pickup'
-                    ? 'Локація магазину'
-                    : 'Відділення перевізника'}
-                </label>
-                <select
-                  id="pickupLocation"
-                  name="pickupLocation"
-                  value={formik.values.pickupLocation}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-3 border ${
-                    formik.touched.pickupLocation && formik.errors.pickupLocation
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                  } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
-                    backgroundPosition: 'right 0.5rem center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: '1.5em 1.5em',
-                    paddingRight: '2.5rem',
-                  }}
-                >
-                  <option value="">Оберіть локацію</option>
-                  {carrierLocations.map((location) => (
-                    <option key={location.id} value={location.id}>
-                      {location.name} - {location.address}
-                    </option>
-                  ))}
-                </select>
-                {formik.touched.pickupLocation && formik.errors.pickupLocation && (
-                  <p className="mt-1 text-sm text-red-500">{formik.errors.pickupLocation}</p>
-                )}
-              </div>
-            )}
-
-            <div>
-              <label
-                htmlFor="paymentMethod"
-                className="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-              >
-                Спосіб оплати
-              </label>
-              <select
-                id="paymentMethod"
-                name="paymentMethod"
-                value={formik.values.paymentMethod}
+              <FormSelect
+                label={carriers.find(c => c.id === parseInt(formik.values.carrierId))?.code === 'self-pickup'
+                  ? 'Локація магазину'
+                  : 'Відділення перевізника'}
+                id="pickupLocation"
+                name="pickupLocation"
+                value={formik.values.pickupLocation}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`w-full px-4 py-3 border ${
-                  formik.touched.paymentMethod && formik.errors.paymentMethod
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 dark:border-gray-700 focus:ring-gray-900 dark:focus:ring-white'
-                } bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors appearance-none cursor-pointer`}
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
-                  backgroundPosition: 'right 0.5rem center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '1.5em 1.5em',
-                  paddingRight: '2.5rem',
-                }}
+                error={formik.errors.pickupLocation}
+                touched={formik.touched.pickupLocation}
               >
-                <option value="">Оберіть спосіб оплати</option>
-                <option value="cash">Готівка при отриманні</option>
-                <option value="card">Банківська карта (Visa/Mastercard)</option>
-                <option value="online">Онлайн оплата (Apple Pay/Google Pay)</option>
-                <option value="transfer">Банківський переказ</option>
-              </select>
-              {formik.touched.paymentMethod && formik.errors.paymentMethod && (
-                <p className="mt-1 text-sm text-red-500">{formik.errors.paymentMethod}</p>
-              )}
-            </div>
+                <option value="">Оберіть локацію</option>
+                {carrierLocations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name} - {location.address}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+
+            <FormSelect
+              label="Спосіб оплати"
+              id="paymentMethod"
+              name="paymentMethod"
+              value={formik.values.paymentMethod}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.paymentMethod}
+              touched={formik.touched.paymentMethod}
+            >
+              <option value="">Оберіть спосіб оплати</option>
+              {PAYMENT_METHOD_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </FormSelect>
           </div>
 
           {showError && Object.keys(formik.errors).length > 0 && (
