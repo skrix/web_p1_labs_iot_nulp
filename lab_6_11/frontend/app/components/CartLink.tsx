@@ -12,7 +12,7 @@ export function CartLink({ to, children, count }: CartLinkProps) {
   return (
     <HeaderLink to={to} className="relative">
       {children}
-      <CartBadge count={count} />
+      {!!count && <CartBadge count={count} />}
     </HeaderLink>
   );
 }
