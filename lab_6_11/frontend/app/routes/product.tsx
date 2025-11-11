@@ -17,7 +17,7 @@ export default function Product() {
   return (
     <Layout>
       <div className="container mx-auto px-4 pt-24 pb-16 bg-white dark:bg-gray-950 min-h-screen">
-        <ProductDetails productId={id || "1"} onBack={() => navigate("/catalog")} />
+        <ProductDetails productId={id || "1"} onBack={() => navigate(-1)} />
       </div>
     </Layout>
   );
