@@ -3,7 +3,7 @@ import { SocialLinks } from "./SocialLinks";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-300 py-8">
+    <footer className="py-8">
       <div className="container mx-auto px-4">
         <div className="flex items-start justify-between mb-8 flex-col lg:flex-row">
           <div className="flex w-xs flex-col">
@@ -20,7 +20,7 @@ export function Footer() {
             <SocialLinks />
           </div>
         </div>
-        <div className="border-t border-gray-300 pt-4 text-center text-sm text-gray-600">
+        <div className="border-t border-white pt-4 text-center text-sm text-gray-600">
           2025 © Vasyl&Co. All rights reserved.
         </div>
       </div>

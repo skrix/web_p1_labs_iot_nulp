@@ -37,15 +37,10 @@ export function TilesSection() {
   );
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-60 bg-white dark:bg-black">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tiles}
-        </div>
-        <div className="flex justify-center">
-          <button className="px-8 py-3 bg-black hover:bg-black/50 text-white font-medium transition-colors cursor-pointer">
-            Переглянути більше
-          </button>
         </div>
       </div>
     </section>

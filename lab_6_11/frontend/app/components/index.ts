@@ -4,5 +4,15 @@ export { Footer } from "./Footer";
 export { Hero } from "./Hero";
 export { Tile } from "./Tile";
 export { TilesSection } from "./TilesSection";
+export { ProductsSection } from "./ProductsSection";
 export { Logo } from "./Logo";
 export { TypingText } from "./TypingText";
+export { FilterDropdown } from "./FilterDropdown";
+export { FilterBar } from "./FilterBar";
+export { SearchBar } from "./SearchBar";
+export { CatalogGrid } from "./CatalogGrid";
+export { ProductCard } from "./ProductCard";
+export { ProductDetails } from "./ProductDetails";
+
+export { useProducts } from "../context/ProductsContext";
+export type { Product } from "../context/ProductsContext";

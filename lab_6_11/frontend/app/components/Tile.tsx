@@ -29,8 +29,8 @@ export const Tile = memo(function Tile({ title, description, src }: TileProps) {
           <img src={src} alt={title} className="w-full h-full object-cover object-center" />
         )}
       </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-600 text-center text-sm leading-relaxed">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
+      <p className="text-gray-600 dark:text-white/70 text-center text-sm leading-relaxed">
         {description}
       </p>
     </div>
