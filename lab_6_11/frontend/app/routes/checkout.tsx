@@ -104,9 +104,9 @@ export default function Checkout() {
       setSubmitError(null);
 
       try {
-        // Prepare order items from cart
         const orderItems = items.map(item => ({
           productId: item.product.id,
+          productItemId: item.productItem.id,
           quantity: item.quantity,
         }));
 

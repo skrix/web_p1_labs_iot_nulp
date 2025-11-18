@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'productId',
         as: 'product'
       });
+
+      // OrderItem can reference a specific ProductItem
+      OrderItem.belongsTo(models.ProductItem, {
+        foreignKey: 'productItemId',
+        as: 'productItem'
+      });
     }
   }
 
@@ -32,6 +38,18 @@ module.exports = (sequelize, DataTypes) => {
         model: 'products',
         key: 'id'
       }
+    },
+    productItemId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'product_items',
+        key: 'id'
+      }
+    },
+    variation: {
+      type: DataTypes.STRING(50),
+      allowNull: true
     },
     quantity: {
       type: DataTypes.INTEGER,

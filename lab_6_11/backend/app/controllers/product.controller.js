@@ -2,6 +2,7 @@ const db = require("../models");
 const Product = db.Product;
 const Category = db.Category;
 const Brand = db.Brand;
+const ProductItem = db.ProductItem;
 
 exports.create = async (req, res) => {
   try {
@@ -91,7 +92,15 @@ exports.findAll = async (req, res) => {
 
     const products = await Product.findAll({
       where: whereClause,
-      include: [categoryInclude, brandInclude],
+      include: [
+        categoryInclude,
+        brandInclude,
+        {
+          model: ProductItem,
+          as: "items",
+          attributes: ["id", "variation", "sku", "price", "currency", "stock", "isAvailable", "description", "image"]
+        }
+      ],
       order: [["createdAt", "DESC"]]
     });
 
@@ -116,6 +125,11 @@ exports.findOne = async (req, res) => {
           model: Brand,
           as: "brand",
           attributes: ["id", "name", "slug"]
+        },
+        {
+          model: ProductItem,
+          as: "items",
+          attributes: ["id", "variation", "sku", "price", "currency", "stock", "isAvailable", "description", "image"]
         }
       ]
     });

@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'brandId',
         as: 'brand'
       });
+
+      // Product has many ProductItems (actual buyable instances)
+      Product.hasMany(models.ProductItem, {
+        foreignKey: 'productId',
+        as: 'items'
+      });
     }
   }
   Product.init({

@@ -19,6 +19,7 @@ app.get('/api', (req, res) => {
 
 const userRoutes = require("./app/routes/user.routes");
 const productRoutes = require("./app/routes/product.routes");
+const productItemRoutes = require("./app/routes/productItem.routes");
 const categoryRoutes = require("./app/routes/category.routes");
 const brandRoutes = require("./app/routes/brand.routes");
 const carrierRoutes = require("./app/routes/carrier.routes");
@@ -27,6 +28,7 @@ const orderRoutes = require("./app/routes/order.routes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/product-items", productItemRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/carriers", carrierRoutes);

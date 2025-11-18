@@ -10,6 +10,21 @@ export interface ProductFilters {
   search?: string;
 }
 
+export type ProductVariation = 'standard' | 'premium' | 'deluxe';
+
+export interface ProductItem {
+  id: number;
+  productId: number;
+  variation: ProductVariation;
+  sku: string;
+  price: number;
+  currency: string;
+  stock: number;
+  isAvailable: boolean;
+  description?: string;
+  image?: string;
+}
+
 export interface Product {
   id: number;
   title: string;
@@ -20,7 +35,8 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
   categories: Category[];
-  brand: Brand[];
+  brand: Brand;
+  items?: ProductItem[];
 }
 
 export const productsApi = {
