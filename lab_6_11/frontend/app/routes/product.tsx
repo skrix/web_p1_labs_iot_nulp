@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router";
 import type { Route } from "./+types/product";
 import { Layout } from "../components/Layout";
-import { ProductDetails } from "../components/ProductDetails";
+import { ProductPage } from "../components/ProductPage";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -15,10 +16,12 @@ export default function Product() {
   const navigate = useNavigate();
 
   return (
+    <ProtectedRoute>
     <Layout>
       <div className="container mx-auto px-4 pt-24 pb-16 bg-white dark:bg-gray-950 min-h-screen">
-        <ProductDetails productId={id || "1"} onBack={() => navigate(-1)} />
+        <ProductPage productId={id} onBack={() => navigate(-1)} />
       </div>
     </Layout>
+    </ProtectedRoute>
   );
 }

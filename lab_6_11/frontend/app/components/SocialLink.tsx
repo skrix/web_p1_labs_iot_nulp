@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-interface SocialIconProps {
+interface SocialLinkProps {
   href: string;
   ariaLabel: string;
   bgColor: string;
@@ -8,7 +8,7 @@ interface SocialIconProps {
   children: React.ReactNode;
 }
 
-export const SocialIcon = memo(function SocialIcon({ href, ariaLabel, bgColor, hoverColor, children }: SocialIconProps) {
+export const SocialLink = memo(function SocialLink({ href, ariaLabel, bgColor, hoverColor, children }: SocialLinkProps) {
   return (
     <a
       href={href}

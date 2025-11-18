@@ -1,52 +1,38 @@
-const db = require("../models");
-const User = db.User;
+const authService = require("../services/auth.service");
 
-exports.create = async (req, res) => {
-  try {
-    const data = await User.create(req.body);
-    res.status(201).json(data);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+const handleError = (res, error) => {
+  console.error("Error:", error);
+  return res.status(error.status).json({ message: error.message });
 };
 
-exports.findAll = async (req, res) => {
+exports.signUp = async (req, res) => {
   try {
-    const data = await User.findAll();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    const { email, password, firstName, lastName } = req.body;
 
-exports.findOne = async (req, res) => {
-  try {
-    const data = await User.findByPk(req.params.id);
-    if (!data) return res.status(404).json({ message: "User not found" });
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-exports.update = async (req, res) => {
-  try {
-    const [num] = await User.update(req.body, {
-      where: { id: req.params.id },
+    const result = await authService.signUp({
+      email,
+      password,
+      firstName,
+      lastName,
     });
-    if (num === 1) res.json({ message: "User updated successfully" });
-    else res.status(404).json({ message: "User not found" });
+
+    res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    handleError(res, err);
   }
 };
 
-exports.delete = async (req, res) => {
+exports.signIn = async (req, res) => {
   try {
-    const num = await User.destroy({ where: { id: req.params.id } });
-    if (num === 1) res.json({ message: "User deleted successfully" });
-    else res.status(404).json({ message: "User not found" });
+    const { email, password } = req.body;
+
+    const result = await authService.signIn({
+      email,
+      password,
+    });
+
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    handleError(res, err);
   }
 };

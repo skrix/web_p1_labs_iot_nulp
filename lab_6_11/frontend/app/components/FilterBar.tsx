@@ -1,10 +1,9 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { SearchBar } from "./SearchBar";
+import { FilterSearch } from "./FilterSearch";
 import { FilterDropdown } from "./FilterDropdown";
 import { categoriesApi, type Category } from "../services/categories.api";
 import { brandsApi, type Brand } from "../services/brands.api";
+import { PRICE_RANGE_OPTIONS } from "../utils/filters";
 
 interface FilterBarProps {
   onSearchChange: (search: string) => void;
@@ -41,11 +40,6 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     fetchFilters();
   }, []);
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    onSearchChange(value);
-  };
-
   const handleCategoryChange = (value: string) => {
     setFilterCategory(value);
     onCategoryChange(value);
@@ -61,6 +55,19 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     onPriceChange(value);
   };
 
+  const handleClearAllFilters = () => {
+    setSearch("");
+    setFilterCategory("");
+    setFilterBrand("");
+    setFilterPrice("");
+    onSearchChange("");
+    onCategoryChange("");
+    onBrandChange("");
+    onPriceChange("");
+  };
+
+  const hasActiveFilters = search || filterCategory || filterBrand || filterPrice;
+
   const categoryOptions = categories.map(category => ({
     value: category.slug,
     label: category.label
@@ -70,16 +77,6 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     value: brand.slug,
     label: brand.name
   }));
-
-  const priceOptions = [
-    { value: "0-300", label: "До 300 ₴" },
-    { value: "300-600", label: "300-600 ₴" },
-    { value: "600-1000", label: "600-1000 ₴" },
-    { value: "1000-1500", label: "1000-1500 ₴" },
-    { value: "1500-2000", label: "1500-2000 ₴" },
-    { value: "2000-3000", label: "2000-3000 ₴" },
-    { value: "3000+", label: "Понад 3000 ₴" },
-  ];
 
   return (
     <div className="bg-white dark:bg-gray-950 py-6 mb-8">
@@ -104,17 +101,33 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
               value={filterPrice}
               onChange={handlePriceChange}
               label="Ціна"
-              options={priceOptions}
+              options={PRICE_RANGE_OPTIONS}
             />
           </div>
 
           <div className="w-full md:w-80">
-            <SearchBar value={search} onChange={handleSearchChange} />
+            <FilterSearch
+              value={search}
+              onChange={setSearch}
+              onSearch={() => onSearchChange(search)}
+            />
           </div>
 
-          <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer">
+          <button
+            onClick={() => onSearchChange(search)}
+            className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer"
+          >
             Пошук
           </button>
+
+          {hasActiveFilters && (
+            <button
+              onClick={handleClearAllFilters}
+              className="px-8 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white font-medium whitespace-nowrap transition-colors cursor-pointer"
+            >
+              Скинути фільтри
+            </button>
+          )}
         </div>
       </div>
     </div>

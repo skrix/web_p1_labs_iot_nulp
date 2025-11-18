@@ -8,7 +8,8 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import { ProductsProvider } from "./context/ProductsContext";
+import { Provider } from "react-redux";
+import { store } from "./store";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -44,9 +45,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ProductsProvider>
+    <Provider store={store}>
       <Outlet />
-    </ProductsProvider>
+    </Provider>
   );
 }
 

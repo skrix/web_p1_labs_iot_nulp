@@ -1,33 +1,34 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { useProducts } from "../context/ProductsContext";
 import { Spinner } from "./Spinner";
 import type { Product } from "../services/products.api";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { addToCart } from "../store/cartSlice";
+import { fetchProductById, selectProductsLoading } from "../store/productsSlice";
+import { formatPrice } from "../utils/currency";
 
-interface ProductDetailsProps {
-  productId: string;
+interface ProductPageProps {
+  productId: string | undefined;
   onBack: () => void;
 }
 
-export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
+export function ProductPage({ productId, onBack }: ProductPageProps) {
   const [quantity, setQuantity] = useState("1");
   const [selectedOption, setSelectedOption] = useState("");
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  const { getProductById } = useProducts();
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector(selectProductsLoading);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      setLoading(true);
-      const data = await getProductById(parseInt(productId));
-      setProduct(data);
-      setLoading(false);
+      const result = await dispatch(fetchProductById(parseInt(productId)));
+      if (result.meta.requestStatus === 'fulfilled') {
+        setProduct(result.payload as Product);
+      }
     };
 
     fetchProduct();
-  }, [productId, getProductById]);
+  }, [productId, dispatch]);
 
   return (
     <>
@@ -110,7 +111,7 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
 
           <div className="flex items-center justify-between py-6 border-t border-gray-300 dark:border-gray-700">
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
-              Ціна: {product.price} ₴
+              Ціна: {formatPrice(product.price, product.currency)}
             </div>
 
             <div className="flex gap-4">
@@ -120,7 +121,14 @@ export function ProductDetails({ productId, onBack }: ProductDetailsProps) {
               >
                 Повернутися
               </button>
-              <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium transition-colors">
+              <button
+                onClick={() => {
+                  if (product) {
+                    dispatch(addToCart({ product, quantity: parseInt(quantity) || 1 }));
+                  }
+                }}
+                className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium transition-colors"
+              >
                 Додати в кошик
               </button>
             </div>

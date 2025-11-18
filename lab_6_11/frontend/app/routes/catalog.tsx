@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { Route } from "./+types/catalog";
 import { Layout } from "../components/Layout";
-import { CatalogGrid } from "../components/CatalogGrid";
+import { ProductsCatalog } from "../components/ProductsCatalog";
 import { FilterBar } from "../components/FilterBar";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,6 +19,7 @@ export default function Catalog() {
   const [priceRange, setPriceRange] = useState("");
 
   return (
+    <ProtectedRoute>
     <Layout>
       <div className="container mx-auto px-4 pt-24 bg-white dark:bg-gray-950 min-h-screen">
         <FilterBar
@@ -26,7 +28,7 @@ export default function Catalog() {
           onBrandChange={setBrand}
           onPriceChange={setPriceRange}
         />
-        <CatalogGrid
+        <ProductsCatalog
           searchQuery={searchQuery}
           category={category}
           brand={brand}
@@ -34,5 +36,6 @@ export default function Catalog() {
         />
       </div>
     </Layout>
+    </ProtectedRoute>
   );
 }

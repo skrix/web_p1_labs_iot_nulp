@@ -15,6 +15,7 @@ export interface Product {
   title: string;
   description: string;
   price: number;
+  currency: string;
   image: string;
   createdAt: string;
   updatedAt: string;
