@@ -55,12 +55,7 @@ exports.create = async (req, res) => {
       // Fetch ProductItem with lock to prevent race conditions
       const productItem = await ProductItem.findByPk(item.productItemId, {
         transaction,
-        lock: transaction.LOCK.UPDATE,
-        include: [{
-          model: Product,
-          as: 'product',
-          attributes: ['id', 'title']
-        }]
+        lock: transaction.LOCK.UPDATE
       });
 
       if (!productItem) {
