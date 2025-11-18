@@ -1,6 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { ProductCard } from "./ProductCard";
+import { Spinner } from "./Spinner";
 import { useProducts } from "../context/ProductsContext";
+import type { ProductFilters } from "../services/products.api";
 
 interface CatalogGridProps {
   searchQuery?: string;
@@ -15,63 +17,51 @@ export function CatalogGrid({
   brand = "",
   priceRange = ""
 }: CatalogGridProps) {
-  const { products } = useProducts();
+  const { products, error, fetchProducts } = useProducts();
+  const [loading, setLoading] = useState(false);
 
-  const filteredProducts = useMemo(() => {
-    let filtered = products;
+  useEffect(() => {
+    const loadProducts = async () => {
+      const filters: ProductFilters = {};
 
-    // Filter by category
-    if (category) {
-      filtered = filtered.filter((product) => product.category === category);
-    }
+      if (category) { filters.category = category; }
+      if (brand) { filters.brand = brand; }
+      if (searchQuery.trim()) { filters.search = searchQuery; }
 
-    // Filter by brand
-    if (brand) {
-      filtered = filtered.filter((product) => product.brand === brand);
-    }
-
-    // Filter by price range
-    if (priceRange) {
-      filtered = filtered.filter((product) => {
-        const price = product.price;
-
+      if (priceRange) {
         if (priceRange === "0-300") {
-          return price <= 300;
+          filters.maxPrice = 300;
         } else if (priceRange === "300-600") {
-          return price > 300 && price <= 600;
+          filters.minPrice = 300;
+          filters.maxPrice = 600;
         } else if (priceRange === "600-1000") {
-          return price > 600 && price <= 1000;
+          filters.minPrice = 600;
+          filters.maxPrice = 1000;
         } else if (priceRange === "1000-1500") {
-          return price > 1000 && price <= 1500;
+          filters.minPrice = 1000;
+          filters.maxPrice = 1500;
         } else if (priceRange === "1500-2000") {
-          return price > 1500 && price <= 2000;
+          filters.minPrice = 1500;
+          filters.maxPrice = 2000;
         } else if (priceRange === "2000-3000") {
-          return price > 2000 && price <= 3000;
+          filters.minPrice = 2000;
+          filters.maxPrice = 3000;
         } else if (priceRange === "3000+") {
-          return price > 3000;
+          filters.minPrice = 3000;
         }
+      }
 
-        return true;
-      });
-    }
+      setLoading(true);
+      await fetchProducts(filters);
+      setLoading(false);
+    };
 
-    // Filter by search query
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((product) => {
-        return (
-          product.title.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query)
-        );
-      });
-    }
-
-    return filtered;
-  }, [products, searchQuery, category, brand, priceRange]);
+    loadProducts();
+  }, [searchQuery, category, brand, priceRange, fetchProducts]);
 
   const productCards = useMemo(
     () =>
-      filteredProducts.map((product) => (
+      products.map((product) => (
         <ProductCard
           key={product.id}
           id={product.id}
@@ -81,22 +71,31 @@ export function CatalogGrid({
           image={product.image}
         />
       )),
-    [filteredProducts]
+    [products]
   );
 
   return (
-    <div className="pb-16">
-      {productCards.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {productCards}
-        </div>
-      ) : (
-        <div className="text-center py-16">
-          <p className="text-gray-500 dark:text-gray-400 text-lg">
-            Нічого не знайдено за запитом "{searchQuery || category || brand}"
-          </p>
+    <>
+      {loading && <Spinner message="Завантаження каталогу..." />}
+      {!loading && (
+        <div className="pb-16">
+          {error ? (
+            <div className="text-center py-16">
+              <p className="text-red-500 text-lg">Помилка: {error}</p>
+            </div>
+          ) : productCards.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-gray-500 dark:text-gray-400 text-lg">
+                Нічого не знайдено за запитом "{searchQuery || category || brand}"
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {productCards}
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 }

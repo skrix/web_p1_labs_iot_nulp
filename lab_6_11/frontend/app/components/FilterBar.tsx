@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SearchBar } from "./SearchBar";
 import { FilterDropdown } from "./FilterDropdown";
+import { categoriesApi, type Category } from "../services/categories.api";
+import { brandsApi, type Brand } from "../services/brands.api";
 
 interface FilterBarProps {
   onSearchChange: (search: string) => void;
@@ -16,6 +18,28 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
   const [filterBrand, setFilterBrand] = useState("");
   const [filterPrice, setFilterPrice] = useState("");
   const [search, setSearch] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const [categoriesData, brandsData] = await Promise.all([
+          categoriesApi.getAll(),
+          brandsApi.getAll()
+        ]);
+        setCategories(categoriesData);
+        setBrands(brandsData);
+      } catch (error) {
+        console.error('Failed to fetch filters:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFilters();
+  }, []);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -37,28 +61,15 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     onPriceChange(value);
   };
 
-  const categoryOptions = [
-    { value: "pourover", label: "Пуровери" },
-    { value: "chemex", label: "Кемекси" },
-    { value: "aeropress", label: "Аеропреси" },
-    { value: "filters", label: "Фільтри" },
-    { value: "kettles", label: "Чайники" },
-    { value: "servers", label: "Сервери" },
-    { value: "scales", label: "Ваги" },
-    { value: "grinders", label: "Кавомолки" },
-    { value: "accessories", label: "Аксесуари" },
-  ];
+  const categoryOptions = categories.map(category => ({
+    value: category.slug,
+    label: category.label
+  }));
 
-  const brandOptions = [
-    { value: "vasyl-co", label: "Vasyl&Co" },
-    { value: "chemex", label: "Chemex" },
-    { value: "aeropress", label: "AeroPress" },
-    { value: "dotyk", label: "Дотик (Dotyk)" },
-    { value: "sibarist", label: "SIBARIST" },
-    { value: "samadoyo", label: "Samadoyo" },
-    { value: "hario", label: "Hario" },
-    { value: "generic", label: "Інші" },
-  ];
+  const brandOptions = brands.map(brand => ({
+    value: brand.slug,
+    label: brand.name
+  }));
 
   const priceOptions = [
     { value: "0-300", label: "До 300 ₴" },
@@ -74,7 +85,6 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
     <div className="bg-white dark:bg-gray-950 py-6 mb-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-4 items-center">
-          {/* Filter Dropdowns */}
           <div className="flex flex-col sm:flex-row gap-4 flex-1 w-full md:w-auto">
             <FilterDropdown
               value={filterCategory}
@@ -98,12 +108,10 @@ export function FilterBar({ onSearchChange, onCategoryChange, onBrandChange, onP
             />
           </div>
 
-          {/* Search Bar */}
           <div className="w-full md:w-80">
             <SearchBar value={search} onChange={handleSearchChange} />
           </div>
 
-          {/* Apply Button */}
           <button className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium whitespace-nowrap transition-colors cursor-pointer">
             Пошук
           </button>
