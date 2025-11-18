@@ -9,20 +9,30 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// CORS configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || '*',
+  origin: (origin, callback) => {
+    callback(null, true);
+  },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
 
+// Health check endpoint
 app.get('/api', (req, res) => {
-  res.json({ message: "Hello world!" });
-})
+  res.json({ message: "Hello world!", timestamp: new Date().toISOString() });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
+  });
+});
 
 const userRoutes = require("./app/routes/user.routes");
 const productRoutes = require("./app/routes/product.routes");
@@ -41,6 +51,24 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/carriers", carrierRoutes);
 app.use("/api/carrier-locations", carrierLocationRoutes);
 app.use("/api/orders", orderRoutes);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Not Found',
+    path: req.path,
+    method: req.method
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+  });
+});
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {

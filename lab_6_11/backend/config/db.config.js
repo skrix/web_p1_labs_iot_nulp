@@ -1,4 +1,5 @@
 require('dotenv').config()
+const pg = require('pg');
 
 module.exports = {
   development: {
@@ -36,11 +37,19 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
+    dialectModule: pg,
     dialectOptions: {
-      ssl: process.env.DB_SSL === 'true' ? {
+      ssl: {
         require: true,
         rejectUnauthorized: false
-      } : false
+      }
     },
+    pool: {
+      max: 2,
+      min: 0,
+      idle: 0,
+      acquire: 3000,
+      evict: 60000
+    }
   },
 };
