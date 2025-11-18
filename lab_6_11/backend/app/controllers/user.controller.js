@@ -36,3 +36,13 @@ exports.signIn = async (req, res) => {
     handleError(res, err);
   }
 };
+
+exports.getProfile = async (req, res) => {
+  try {
+    res.status(200).json({
+      user: req.user
+    });
+  } catch (err) {
+    handleError(res, err);
+  }
+};

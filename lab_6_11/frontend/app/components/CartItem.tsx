@@ -10,22 +10,30 @@ interface CartItemProps {
 
 export const CartItem = memo(function CartItem({ item }: CartItemProps) {
   const dispatch = useAppDispatch();
-  const { product, quantity } = item;
+  const { product, productItem, quantity } = item;
+
+  const isLowStock = productItem.stock < 10;
+  const itemTotal = productItem.price * quantity;
 
   const handleDecrease = () => {
-    if (quantity > 1) {
-      dispatch(updateQuantity({ productId: product.id, quantity: quantity - 1 }));
+    const newQuantity = quantity - 1;
+    if (newQuantity > 0) {
+      dispatch(updateQuantity({ productItemId: productItem.id, quantity: newQuantity }));
     } else {
-      dispatch(removeFromCart(product.id));
+      dispatch(removeFromCart({ productItemId: productItem.id }));
     }
   };
 
   const handleIncrease = () => {
-    dispatch(updateQuantity({ productId: product.id, quantity: quantity + 1 }));
+    if (quantity >= productItem.stock) {
+      alert(`Неможливо додати більше. Доступно лише ${productItem.stock} шт.`);
+      return;
+    }
+    dispatch(updateQuantity({ productItemId: productItem.id, quantity: quantity + 1 }));
   };
 
   const handleRemove = () => {
-    dispatch(removeFromCart(product.id));
+    dispatch(removeFromCart({ productItemId: productItem.id }));
   };
 
   return (
@@ -42,9 +50,17 @@ export const CartItem = memo(function CartItem({ item }: CartItemProps) {
         <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2">
           {product.title}
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {formatPrice(product.price, product.currency)} за шт.
+        <p className="text-sm text-gray-500 dark:text-gray-500 mb-1">
+          Варіант: {productItem.variation}
         </p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          {formatPrice(productItem.price, productItem.currency)} за шт.
+        </p>
+        {isLowStock && (
+          <p className="text-xs text-orange-500 dark:text-orange-400 mt-1">
+            Залишилось {productItem.stock} шт.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
@@ -61,8 +77,10 @@ export const CartItem = memo(function CartItem({ item }: CartItemProps) {
           </span>
           <button
             onClick={handleIncrease}
-            className="w-10 h-10 border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center font-bold"
+            disabled={quantity >= productItem.stock}
+            className="w-10 h-10 border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Increase quantity"
+            title={quantity >= productItem.stock ? `Максимум: ${productItem.stock} шт.` : "Збільшити кількість"}
           >
             +
           </button>
@@ -70,7 +88,7 @@ export const CartItem = memo(function CartItem({ item }: CartItemProps) {
 
         <div className="flex items-center gap-4">
           <div className="text-gray-900 dark:text-white font-bold text-xl min-w-24 text-center md:text-right">
-            {formatPrice(product.price * quantity, product.currency)}
+            {formatPrice(itemTotal, productItem.currency)}
           </div>
 
           <button

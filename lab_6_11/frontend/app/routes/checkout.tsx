@@ -5,6 +5,7 @@ import { FormInput } from "../components/FormInput";
 import { FormSelect } from "../components/FormSelect";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { selectCartItems, selectCartTotalAmount, clearCart } from "../store/cartSlice";
+import { selectCurrentUser } from "../store/authSlice";
 import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
@@ -68,6 +69,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
+  const currentUser = useAppSelector(selectCurrentUser);
   const [showError, setShowError] = useState(false);
   const [carriers, setCarriers] = useState<Carrier[]>([]);
   const [carrierLocations, setCarrierLocations] = useState<CarrierLocation[]>([]);
@@ -89,24 +91,25 @@ export default function Checkout() {
 
   const formik = useFormik<FormValues>({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
+      firstName: currentUser?.firstName || '',
+      lastName: currentUser?.lastName || '',
+      email: currentUser?.email || '',
       phone: '',
       city: '',
       carrierId: '',
       pickupLocation: '',
       paymentMethod: '',
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       setSubmitError(null);
 
       try {
-        // Prepare order items from cart
         const orderItems = items.map(item => ({
           productId: item.product.id,
+          productItemId: item.productItem.id,
           quantity: item.quantity,
         }));
 
