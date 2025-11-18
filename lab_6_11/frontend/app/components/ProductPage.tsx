@@ -7,7 +7,7 @@ import { fetchProductById, selectProductsLoading } from "../store/productsSlice"
 import { formatPrice } from "../utils/currency";
 
 interface ProductPageProps {
-  productId: string;
+  productId: string | undefined;
   onBack: () => void;
 }
 
