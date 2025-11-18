@@ -1,10 +1,10 @@
 interface HeaderUserProfileProps {
-  username: string;
+  firstName: string;
   onLogout: () => void;
 }
 
 export function HeaderUserProfile({
-  username,
+  firstName,
   onLogout,
 }: HeaderUserProfileProps) {
   return (
@@ -12,7 +12,7 @@ export function HeaderUserProfile({
       {/* Desktop */}
       <div className="hidden md:flex items-center gap-4 ml-4 pl-4 border-l border-gray-300 dark:border-gray-700">
         <span className="text-sm text-gray-600 dark:text-gray-400">
-          {username}
+          {firstName}
         </span>
         <button
           onClick={onLogout}
@@ -25,7 +25,7 @@ export function HeaderUserProfile({
       {/* Mobile */}
       <div className="md:hidden border-t border-gray-300 dark:border-gray-700 pt-4 mt-2">
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 px-6">
-          {username}
+          {firstName}
         </p>
         <button
           onClick={onLogout}

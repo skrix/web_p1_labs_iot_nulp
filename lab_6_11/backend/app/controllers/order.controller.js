@@ -11,7 +11,6 @@ exports.create = async (req, res) => {
 
   try {
     const {
-      userId,
       firstName,
       lastName,
       email,
@@ -23,6 +22,8 @@ exports.create = async (req, res) => {
       items,
       notes
     } = req.body;
+
+    const userId = req.user.id;
 
     // Validate order has items
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -181,14 +182,14 @@ exports.create = async (req, res) => {
 
 exports.findAll = async (req, res) => {
   try {
-    const { status, userId, paymentMethod } = req.query;
+    const { status, paymentMethod } = req.query;
 
-    let where = {};
+    let where = {
+      userId: req.user.id
+    };
+
     if (status) {
       where.status = status;
-    }
-    if (userId) {
-      where.userId = userId;
     }
     if (paymentMethod) {
       where.paymentMethod = paymentMethod;
@@ -271,6 +272,11 @@ exports.findOne = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // Verify user owns this order
+    if (order.userId !== req.user.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
     res.status(200).json(order);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -296,6 +302,11 @@ exports.update = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Verify user owns this order
+    if (order.userId !== req.user.id) {
+      return res.status(403).json({ message: "Access denied" });
     }
 
     if (["shipped", "delivered", "cancelled"].includes(order.status)) {
@@ -360,6 +371,11 @@ exports.delete = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Verify user owns this order
+    if (order.userId !== req.user.id) {
+      return res.status(403).json({ message: "Access denied" });
     }
 
     if (order.status !== "pending") {

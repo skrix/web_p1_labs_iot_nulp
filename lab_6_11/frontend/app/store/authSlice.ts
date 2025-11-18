@@ -5,7 +5,8 @@ import type { RootState } from './index';
 interface User {
   id: number;
   email: string;
-  username: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface AuthState {

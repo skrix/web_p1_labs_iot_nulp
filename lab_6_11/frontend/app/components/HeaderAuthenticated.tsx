@@ -7,13 +7,13 @@ import { useState } from "react";
 
 interface HeaderAuthenticatedProps {
   cartItemCount: number;
-  username: string;
+  firstName: string;
   onLogout: () => void;
 }
 
 export function HeaderAuthenticated({
   cartItemCount,
-  username,
+  firstName,
   onLogout,
 }: HeaderAuthenticatedProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +33,7 @@ export function HeaderAuthenticated({
             <HeaderLink to="/catalog">Магазин</HeaderLink>
             <CartLink to="/cart" count={cartItemCount}>Кошик</CartLink>
 
-            <HeaderUserProfile username={username} onLogout={onLogout} />
+            <HeaderUserProfile firstName={firstName} onLogout={onLogout} />
           </nav>
 
           <HamburgerButton isOpen={isMenuOpen} onClick={toggleMenu} />
@@ -52,7 +52,7 @@ export function HeaderAuthenticated({
               Кошик
             </CartLink>
 
-            <HeaderUserProfile username={username} onLogout={() => {
+            <HeaderUserProfile firstName={firstName} onLogout={() => {
               onLogout();
               closeMenu();
             }} />

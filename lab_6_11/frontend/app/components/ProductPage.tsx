@@ -80,9 +80,22 @@ export function ProductPage({ productId, onBack }: ProductPageProps) {
                 {product.description}
               </p>
 
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {/* Variant Selector */}
-                {product.items && product.items.length > 0 && (
+              {/* Out of Stock Message */}
+              {(!product.items || product.items.length === 0 || !product.items.some(item => item.isAvailable && item.stock > 0)) && (
+                <div className="mb-8 p-6 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded">
+                  <p className="text-red-600 dark:text-red-400 font-bold text-lg text-center">
+                    Товар тимчасово відсутній
+                  </p>
+                  <p className="text-red-500 dark:text-red-400 text-sm text-center mt-2">
+                    Всі варіанти наразі розпродані
+                  </p>
+                </div>
+              )}
+
+              {/* Variant Selector and Quantity (only show if items are available) */}
+              {product.items && product.items.length > 0 && product.items.some(item => item.isAvailable && item.stock > 0) && (
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  {/* Variant Selector */}
                   <div>
                     <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">
                       Варіант
@@ -93,7 +106,7 @@ export function ProductPage({ productId, onBack }: ProductPageProps) {
                         onChange={(e) => {
                           const item = product.items?.find(i => i.id === parseInt(e.target.value));
                           setSelectedProductItem(item || null);
-                          setQuantity(1); // Reset quantity when variant changes
+                          setQuantity(1);
                         }}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-gray-900 dark:focus:border-white appearance-none cursor-pointer transition-colors"
                       >
@@ -114,36 +127,42 @@ export function ProductPage({ productId, onBack }: ProductPageProps) {
                       </svg>
                     </div>
                   </div>
-                )}
 
-                {/* Quantity Input */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">
-                    Кількість
-                  </label>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                    min="1"
-                    max={selectedProductItem?.stock || 999}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-gray-900 dark:focus:border-white transition-colors"
-                  />
-                  {selectedProductItem && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      Доступно: {selectedProductItem.stock} шт.
-                    </p>
-                  )}
+                  {/* Quantity Input */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">
+                      Кількість
+                    </label>
+                    <input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                      min="1"
+                      max={selectedProductItem?.stock || 999}
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-gray-900 dark:focus:border-white transition-colors"
+                    />
+                    {selectedProductItem && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Доступно: {selectedProductItem.stock} шт.
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
           <div className="flex items-center justify-between py-6 border-t border-gray-300 dark:border-gray-700">
+            {/* Price Display */}
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
-              Ціна: {selectedProductItem ? formatPrice(selectedProductItem.price, selectedProductItem.currency) : "—"}
+              {selectedProductItem ? (
+                <>Ціна: {formatPrice(selectedProductItem.price, selectedProductItem.currency)}</>
+              ) : (
+                <>Ціна: —</>
+              )}
             </div>
 
+            {/* Action Buttons */}
             <div className="flex gap-4">
               <button
                 onClick={onBack}
@@ -151,37 +170,38 @@ export function ProductPage({ productId, onBack }: ProductPageProps) {
               >
                 Повернутися
               </button>
-              <button
-                onClick={() => {
-                  if (!selectedProductItem) {
-                    alert("Будь ласка, оберіть варіант товару");
-                    return;
-                  }
 
-                  // Validate stock availability
-                  if (!selectedProductItem.isAvailable) {
-                    alert("Цей варіант товару недоступний");
-                    return;
-                  }
+              {/* Only show Add to Cart if product has available items */}
+              {product.items && product.items.length > 0 && product.items.some(item => item.isAvailable && item.stock > 0) && (
+                <button
+                  onClick={() => {
+                    if (!selectedProductItem) {
+                      alert("Будь ласка, оберіть варіант товару");
+                      return;
+                    }
 
-                  if (selectedProductItem.stock < quantity) {
-                    alert(`Недостатньо товару на складі. Доступно: ${selectedProductItem.stock} шт.`);
-                    return;
-                  }
+                    if (!selectedProductItem.isAvailable) {
+                      alert("Цей варіант товару недоступний");
+                      return;
+                    }
 
-                  if (product && selectedProductItem) {
+                    if (selectedProductItem.stock < quantity) {
+                      alert(`Недостатньо товару на складі. Доступно: ${selectedProductItem.stock} шт.`);
+                      return;
+                    }
+
                     dispatch(addToCart({
                       product,
                       productItem: selectedProductItem,
                       quantity
                     }));
-                  }
-                }}
-                disabled={!selectedProductItem || !selectedProductItem.isAvailable || selectedProductItem.stock <= 0}
-                className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Додати в кошик
-              </button>
+                  }}
+                  disabled={!selectedProductItem || !selectedProductItem.isAvailable || selectedProductItem.stock <= 0}
+                  className="px-8 py-3 bg-black hover:bg-black/50 dark:bg-white dark:hover:bg-white/50 text-white dark:text-black font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Додати в кошик
+                </button>
+              )}
             </div>
           </div>
         </div>

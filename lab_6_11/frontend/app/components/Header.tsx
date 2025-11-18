@@ -25,7 +25,7 @@ export function Header() {
     return (
       <HeaderAuthenticated
         cartItemCount={cartItemCount}
-        username={currentUser?.username || ""}
+        firstName={currentUser?.firstName || ""}
         onLogout={handleLogout}
       />
     );

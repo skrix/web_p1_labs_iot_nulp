@@ -90,7 +90,8 @@ export default function SignUp() {
           user: {
             id: response.user.id,
             email: response.user.email,
-            username: `${response.user.firstName} ${response.user.lastName}`.trim() || response.user.email.split('@')[0],
+            firstName: response.user.firstName,
+            lastName: response.user.firstName
           },
           token: response.token,
         }));
